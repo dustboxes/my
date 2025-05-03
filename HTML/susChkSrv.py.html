@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2025-03-03" />
+  <title>susChkSrv.py</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">susChkSrv.py</h1>
+<p class="date">03 Mar 2025</p>
+</header>
+<h1>NAME</h1>
+<p>susChkSrv.py - Provider for SAP HANA srHook method srServiceStateChanged().</p>
+<h1>DESCRIPTION</h1>
+<p>susChkSrv.py can be used to provide a script for the SAP HANA srHook method srServiceStateChanged().</p>
+<p>The SAP HANA nameserver provides a Python-based API ("HA/DR providers"), which is called at important points of the host auto-failover and system replication takeover processes. These so called hooks can be used for arbitrary operations that need to be executed. The method srServiceStateChanged() is called when HANA processes are failing, starting or stopping.</p>
+<p>Purpose of susChkSrv.py is to detect failing HANA indexserver processes and trigger a fast takeover to the secondary site. With regular configuration of an HANA database, the resource agent (RA) for HANA in a Linux cluster does not trigger a takeover to the secondary site when:<br />
+- A software failure causes one or more HANA processes to be restarted in place by the HANA daemon (hdbdaemon).<br />
+- A hardware error (e.g. SIGBUS from an uncorrectable memory error) causes the indexserver to restart locally.<br />
+See also SAPHanaSR(7) or SAPHanaSR-ScaleOut(7).</p>
+<p>The hook script susChkSrv.py is called on any srServiceStateChanged() event. The script checks for 'isIndexserver and serviceRestart and serviceWasActiveBefore and hostActive and databaseActive'. If it finds the correct entries, it executes the predefined action. As soon as the HANA landscapeHostConfiguration status changes to 1, the Linux cluster will take action. The action depends on HANA system replication status and the RA´s configuration parameters PREFER_SITE_TAKEOVER, AUTOMATED_REGISTER and ON_FAIL_ACTION. See manual page ocf_suse_SAPHana(7) or ocf_suse_SAPHanaController(7).</p>
+<p>Customising of HANA daemon timeout parameters might be needed for adapting the solution to a given environment. Please refer to SAP HANA documentation.</p>
+<p>This hook script needs to be installed, configured and activated on all HANA nodes.</p>
+<h1>SUPPORTED PARAMETERS</h1>
+<p>* The "HA/DR providers" API accepts the following parameters for the ha_dr_provider_suschksrv section in global.ini:</p>
+<dl>
+<dt><strong>[ha_dr_provider_suschksrv]</strong></dt>
+<dd>
+
+</dd>
+<dt><strong>provider = susChkSrv</strong></dt>
+<dd>
+<p>Mandatory. Must not be changed.</p>
+</dd>
+<dt><strong>path = /usr/share/SAPHanaSR-angi</strong></dt>
+<dd>
+<p>Mandatory. Delivered within RPM package. Please change only if requested.</p>
+</dd>
+<dt><strong>execution_order = [ </strong><em>INTEGER</em><strong>
+]</strong></dt>
+<dd>
+<p>Mandatory. Order might depend on other hook scripts.</p>
+</dd>
+<dt><strong>action_on_lost = [ ignore | stop | kill | fence ]</strong></dt>
+<dd>
+<p>Action to be processed when a lost indexserver is identified.<br />
+- <strong>ignore</strong><em>: do nothing, just write to tracefiles.</em><br />
+- <strong>stop</strong><em>: do 'sapcontrol ... StopSystem'.</em> If this is combined with SAPHana or SAPHanaController RA parameter 'AUTOMATED_REGISTER=true', HANA needs to release all OS resources prior to the automated registering. See also manual page ocf_suse_SAPHanaController(7).<br />
+- <strong>kill</strong><em>: do 'HDB kill-&lt;signal</em>&gt;'. The signal can be defined by parameter 'kill_signal'. If this is combined with SAPHanaController RA parameter 'AUTOMATED_REGISTER=true', HANA needs to release all OS resources prior to the automated registering.<br />
+- <strong>fence</strong>: do 'crm node fence &lt;<em>host</em>&gt;'. This needs a Linux cluster STONITH method and sudo permission. This action is primarily meant for scale-up. For scale-out, SAPHanaSR-agent-fencing should be configured additionally, see manual page SAPHanaSR-agent-fencing(8) for details.<br />
+Optional. Default is ignore.</p>
+</dd>
+<dt><strong>kill_signal = [ </strong><em>INTEGER</em><strong>
+]</strong></dt>
+<dd>
+<p>Signal to be used with 'HDB kill-&lt;<em>signal</em>&gt;'.<br />
+Optional. Default is 9.</p>
+</dd>
+<dt><strong>stop_timeout = [ </strong><em>INTEGER</em><strong>
+]</strong></dt>
+<dd>
+<p>How many seconds to wait for 'sapcontrol ... StopSystem' to return. Should be greater than value of HANA parameter 'forcedterminationtimeout'. See also SAPHanaSR_basic_cluster(7).<br />
+Optional. Default is 20 seconds.</p>
+</dd>
+<dt>* The "HA/DR providers" API accepts the following parameter for the trace section in global.ini:</dt>
+<dd>
+
+</dd>
+<dt><strong>[trace]</strong></dt>
+<dd>
+
+</dd>
+<dt><strong>ha_dr_suschksrv = [ info | debug ]</strong></dt>
+<dd>
+<p>Optional. Default is info. Will be added automatically if not set.</p>
+</dd>
+</dl>
+<p>* The HANA daemon TODO for the daemon section of daemon.ini:</p>
+<p><strong>[daemon]</strong></p>
+<dl>
+<dt><strong>terminationtimeout = [ </strong><em>INTEGER</em><strong>
+]</strong></dt>
+<dd>
+<p><br />
+See also SAPHanaSR_basic_cluster(7). Optional. Timeout in milliseconds. Default is 30000.</p>
+</dd>
+<dt><strong>forcedterminationtimeout = [ </strong><em>INTEGER</em><strong> ]</strong></dt>
+<dd>
+<p><br />
+See also SAPHanaSR_basic_cluster(7). Optional. Timeout in milliseconds. Default is 270000.</p>
+</dd>
+</dl>
+<p>* The HANA daemon TODO for the indexserver.&lt;tenant&gt; section of daemon.ini:</p>
+<dl>
+<dt><strong>[indexserver.&lt;</strong><em>tenant</em>&gt;]</dt>
+<dd>
+
+</dd>
+<dt><strong>gracetime = [ </strong><em>INTEGER</em><strong>
+]</strong></dt>
+<dd>
+<p>TODO Should be 6000.<br />
+Optional. Timeout in milliseconds. Default is 2000.</p>
+</dd>
+</dl>
+<h1>RETURN CODES</h1>
+<p><strong>0</strong> Successful program execution.<br />
+<strong>&gt;0</strong> Usage, syntax or execution errors.</p>
+<h1>EXAMPLES</h1>
+<p><strong>*</strong><em> Example for minimal entry in SAP HANA scale-up global configuration</em>
+/hana/shared/$SID/global/hdb/custom/config/global.ini</p>
+<p>In case of a failing indexserver, the event is logged. No action is performed. The section ha_dr_provider_suschksrv is needed on all HANA nodes. The HANA has to be stopped before the file can be changed.</p>
+<blockquote>
+<p>[ha_dr_provider_suschksrv]<br />
+provider = susChkSrv<br />
+path = /usr/share/SAPHanaSR-angi/<br />
+execution_order = 3</p>
+</blockquote>
+<p><strong>*</strong><em> Example for entry in SAP HANA scale-up global configuration</em>
+/hana/shared/HA1/global/hdb/custom/config/global.ini</p>
+<p>In case of a failing indexserver, the complete node will get fenced by calling 'crm node fence ...'. Unlike fence actions from inside the Linux HA cluster, this hook script fence action will be issued even when the cluster is in maintenance and stonith is temporarily disabled. The fence request then is queued until the cluster is set back into active state. See example below for removing queued fence actions.<br />
+The section ha_dr_provider_suschksrv is needed on all HANA nodes. The HANA has to be stopped before the file can be changed. Alterntively use SAPHanaSR-manageProvider for applying an HA/DR provider hook configuration, see manual page SAPHanaSR-manageProvider(8).</p>
+<blockquote>
+<p>[ha_dr_provider_suschksrv]<br />
+provider = susChkSrv<br />
+path = /usr/share/SAPHanaSR-angi/<br />
+execution_order = 2<br />
+action_on_lost = fence</p>
+</blockquote>
+<p><strong>*</strong><em> Example for entry in SAP HANA scale-out global configuration</em>
+/hana/shared/HA1/global/hdb/custom/config/global.ini</p>
+<p>In case of a failing indexserver, the HANA instance will be stopped with 'sacpcontrol ... StopSystem'. HANA timeouts might be adapted to speed up the stop. If this is combined with SAPHanaController parameter 'AUTOMATED_REGISTER=true', HANA needs to release all OS resources prior to the automated registering.<br />
+The hook script should wait maximum 25 seconds on the sapcontrol command to return.<br />
+The section ha_dr_provider_suschksrv is needed on all HANA nodes. The HANA has to be stopped before the file can be changed.<br />
+Note: HANA scale-out is supported only with exactly one master nameserver. No HANA host auto-failover.</p>
+<blockquote>
+<p>[ha_dr_provider_suschksrv]<br />
+provider = susChkSrv<br />
+path = /usr/share/SAPHanaSR-angi/<br />
+execution_order = 2<br />
+action_on_lost = stop<br />
+stop_timeout = 25</p>
+</blockquote>
+<p><strong>*</strong><em> Example for entry in SAP HANA daemon configuration</em>
+/hana/shared/HA1/global/hdb/custom/config/daemon.ini</p>
+<p>TODO Example SID is HA1, tenant is HA1.<br />
+The sections daemon and indexserver.HA1 are needed on all HANA nodes. The HANA has to be stopped before the file can be changed. Please refer to SAP documentation before setting this parameters.</p>
+<blockquote>
+<p>[daemon]<br />
+terminationtimeout = 45000<br />
+forcedterminationtimeout = 15000</p>
+<p>[indexserver.HA1]<br />
+gracetime = 6000</p>
+</blockquote>
+<p><strong>*</strong><em> Example for sudo permissions in /etc/sudoers.d/SAPHanaSR .</em></p>
+<p>SID is HA1. See also manual page SAPHanaSR-hookHelper(8).</p>
+<blockquote>
+<p># SAPHanaSR needs for susChkSrv<br />
+ha1adm ALL=(ALL) NOPASSWD: /usr/bin/SAPHanaSR-hookHelper --sid=HA1 --case=fenceMe</p>
+</blockquote>
+<p><strong>*</strong><em> Example for looking up the sudo permission for the hook script.</em></p>
+<p>All related files (/etc/sudoers and /etc/sudoers.d/*) are scanned. Example SID is HA1.</p>
+<blockquote>
+<p># sudo -U ha1adm -l | grep "NOPASSWD.*/usr/bin/SAPHanaSR-hookHelper"</p>
+</blockquote>
+<p><strong>*</strong><em> Example for checking the HANA tracefiles for srServiceStateChanged() events.</em></p>
+<p>Example SID is HA1. To be executed on the respective HANA master nameserver.<br />
+If the HANA nameserver process is killed, in some cases hook script actions do not make it into the nameserver tracefile. In such cases the hook script´s own tracefile might help, see respective example.</p>
+<blockquote>
+<p># su - ha1adm<br />
+~&gt; cdtrace<br />
+~&gt; grep susChkSrv.*srServiceStateChanged nameserver_*.trc<br />
+~&gt; grep -C2 Executed.*StopSystem nameserver_*.trc</p>
+</blockquote>
+<p><strong>*</strong><em> Example for checking the HANA tracefiles for when the hook script has been loaded.</em></p>
+<p>Example SID is HA1. To be executed on both sites' master nameservers.</p>
+<blockquote>
+<p># su - ha1adm<br />
+~&gt; cdtrace<br />
+~&gt; grep HADR.*load.*susChkSrv nameserver_*.trc<br />
+~&gt; grep susChkSrv.init nameserver_*.trc</p>
+</blockquote>
+<p><strong>*</strong><em> Example for checking the hook script tracefile for actions.</em></p>
+<p>Example SID is HA1. To be executed on all nodes. All incidents are logged on the node where it happens.</p>
+<blockquote>
+<p># su - ha1adm<br />
+~&gt; cdtrace<br />
+~&gt; egrep '(LOST:|STOP:|START:|DOWN:|init|load|fail)' nameserver_suschksrv.trc</p>
+</blockquote>
+<p><strong>*</strong><em> Example for checking the hook script tracefile for node fence actions.</em></p>
+<p>Example SID is HA1. To be executed on both sites' master nameservers. See also manual page SAPHanaSR-hookHelper(8).</p>
+<blockquote>
+<p># su - ha1adm<br />
+~&gt; cdtrace<br />
+~&gt; grep fence.node nameserver_suschksrv.trc</p>
+</blockquote>
+<p><strong>*</strong><em> Example for revoking a queued fence request from the Linux cluster.</em></p>
+<p>This could be done if an HANA indexserver failure has triggerd an node fence action while the Linux cluster is in maintenance. Before revoking a fence request, be sure it has been issued by the HA/DR provider hook script. See example above for checking the hook script tracefile for node fence actions. Example node is node2. To be executed on that node. See also manual pages SAPHanaSR-hookHelper(8) and crm_attribute(8).<br />
+Note: This removes the node attribute terminate=true from the Linux cluster CIB. It does not touch any fencing device.</p>
+<blockquote>
+<p># grep fenced:.termination.was.requested /var/log/pacemaker/pacemaker.log<br />
+# crm_attribute -t status -N 'node2' -D -n terminate<br />
+# crm_attribute -t status -N 'node2' -G -n terminate</p>
+</blockquote>
+<p><strong>*</strong> Example for killing HANA hdbindexserver process.</p>
+<p>This could be done for testing the HA/DR provider hook script integration. Killing HANA processes is dangerous. This test should not be done on production systems. Please refer to SAP HANA documentation. See also manual page killall(1).<br />
+Note: Understand the impact before trying.</p>
+<p>1. Check HANA and Linux cluster for clean idle state.</p>
+<p>2. On secondary master name server, kill the hdbindexserver process.</p>
+<blockquote>
+<p># killall -9 hdbindexserver</p>
+</blockquote>
+<p>3. Check the nameserver tracefile for srServiceStateChanged() events.</p>
+<p>4. Check HANA and Linux cluster for clean idle state.</p>
+<h1>FILES</h1>
+<dl>
+<dt>/usr/share/SAPHanaSR-angi/susChkSrv.py</dt>
+<dd>
+<p>the hook provider, delivered with the RPM</p>
+</dd>
+<dt>/usr/bin/SAPHanaSR-hookHelper</dt>
+<dd>
+<p>the external script for node fencing</p>
+</dd>
+<dt>/etc/sudoers, /etc/sudoers.d/*</dt>
+<dd>
+<p>the sudo permissions configuration</p>
+</dd>
+<dt>/hana/shared/$SID/global/hdb/custom/config/global.ini</dt>
+<dd>
+<p>the on-disk representation of HANA global system configuration</p>
+</dd>
+<dt>/hana/shared/$SID/global/hdb/custom/config/daemon.ini</dt>
+<dd>
+<p>the on-disk representation of HANA daemon configuration</p>
+</dd>
+<dt>/usr/sap/$SID/HDB$nr/$HOST/trace</dt>
+<dd>
+<p>path to HANA tracefiles</p>
+</dd>
+<dt>/usr/sap/$SID/HDB$nr/$HOST/trace/nameserver_suschksrv.trc</dt>
+<dd>
+<p>HADR provider hook script tracefile</p>
+</dd>
+</dl>
+<h1>REQUIREMENTS</h1>
+<p>1. SAP HANA 2.0 SPS05 or later provides the HA/DR provider hook method srServiceStateChanged() with needed parameters.</p>
+<p>2. No other HADR provider hook script should be configured for the srServiceStateChanged() method. Hook scripts for other methods, provided in SAPHanaSR and SAPHanaSR-ScaleOut, can be used in parallel to susChkSrv.py, if not documented contradictingly.</p>
+<p>3. The user ${sid}adm needs execution permission as user root for the command SAPHanaSR-hookHelper.</p>
+<p>4. The hook provider needs to be added to the HANA global configuration, in memory and on disk (in persistence).</p>
+<p>5. HANA daemon timeout TODO</p>
+<p>6. The hook script runs in the HANA nameserver. It runs on the node where the event srServiceStateChanged() occurs.</p>
+<p>7. HANA scale-out is supported only with exactly one master nameserver. HANA host auto-failover is not supported. Thus no standby nodes.</p>
+<p>8. A Linux cluster STONITH method for all nodes is needed, particularly if susChkSrv.py parameter 'action_on_lost=fence' is set.</p>
+<p>9. If susChkSrv.py parameter 'action_on_lost=stop' is set and the RA SAPHana or SAPHanaController parameter 'AUTOMATED_REGISTER=true' is set, it depends on HANA to release all OS resources prior to the registering attempt.</p>
+<p>10. For HANA scale-out, the susChkSrv.py parameter 'action_on_lost=fence' should be used only, if the SAPHanaSR-alert-fencing is configured.</p>
+<p>11. If the hook provider should be pre-compiled, the particular Python version that comes with SAP HANA has to be used.</p>
+<h1>BUGS</h1>
+<p>In case of any problem, please use your favourite SAP support process to open a request for the component BC-OP-LNX-SUSE. Please report any other feedback and suggestions to <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="60060505040201030b20131513054e030f0d">[email&#160;protected]</a>.</p>
+<h1>SEE ALSO</h1>
+<p><strong>SAPHanaSR</strong>(7) , <strong>SAPHanaSR-ScaleOut</strong>(7) , <strong>SAPHanaSR.py</strong>(7) , <strong>ocf_suse_SAPHanaTopology</strong>(7) , <strong>ocf_suse_SAPHanaController</strong>(7) , <strong>SAPHanaSR-hookHelper</strong>(8) , <strong>SAPHanaSR-manageProvider</strong>(8) , <strong>SAPHanaSR-alert-fencing</strong>(8) , <strong>crm</strong>(8) , <strong>crm_attribute</strong>(8) , <strong>python3</strong>(8) , <strong>killall</strong>(1) ,<br />
+https://help.sap.com/docs/SAP_HANA_PLATFORM?locale=en-US<br />
+https://help.sap.com/docs/SAP_HANA_PLATFORM/42668af650f84f9384a3337bcd373692/e2064c4aa47f443ab6a107f9ab7f5edd.html?version=2.0.01<br />
+https://help.sap.com/docs/SAP_HANA_PLATFORM/6b94445c94ae495c83a19646e7c3fd56/5df2e766549a405e95de4c5d7f2efc2d.html?locale=en-US<br />
+SAP note 2177064</p>
+<h1>AUTHORS</h1>
+<p>A.Briel, F.Herschel, L.Pinne.</p>
+<h1>COPYRIGHT</h1>
+<p>(c) 2022-2025 SUSE LLC<br />
+susChkSrv.py comes with ABSOLUTELY NO WARRANTY.<br />
+For details see the GNU General Public License at http://www.gnu.org/licenses/gpl.html</p>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"93a00d298cbbd417","version":"2025.4.0-1-g37f21b1","r":1,"token":"0357a45f23a943f08700f7f9af191ee6","serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}}}' crossorigin="anonymous"></script>
+</body>
+</html>

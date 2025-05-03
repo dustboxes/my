@@ -1,0 +1,507 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2025-01-10" />
+  <title>SAPHanaSR_maintenance_examples</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">SAPHanaSR_maintenance_examples</h1>
+<p class="date">10 Jan 2025</p>
+</header>
+<h1>NAME</h1>
+<p>SAPHanaSR_maintenance_examples - maintenance examples for SAPHanaController.</p>
+<h1>DESCRIPTION</h1>
+<p>Maintenance examples for SAPHanaController. Please see ocf_suse_SAPHanaController(7), susHanaSR.py(7), susHanaSrMultiTarget.py(7), susTkOver.py(7), susChkSrv.py(7), SAPHanaSR-manageAttr(8), for more examples and read the REQUIREMENTS section below.</p>
+<h1>EXAMPLES</h1>
+<p><strong>* Check status of Linux cluster and HANA system replication pair.</strong></p>
+<p>この手順は、クラスターで何かを行う前、および何かを行った後に実行する必要があります。cs_show_saphanasr_status (8) および後述のセクション「要件」も参照してください。</p>
+<blockquote>
+<p># cs_clusterstate -i<br />
+# crm_mon -1r<br />
+# crm configure show | grep cli-<br />
+# SAPHanaSR-showAttr<br />
+# cs_clusterstate -i</p>
+</blockquote>
+<p><strong>* HANAクラスターリソースとシステムレプリケーションの状態を監視します。</strong></p>
+<p>これは、管理アクションやクラスタテストを実行する場合に便利です。前述のチェックに代わるものではありません。cs_show_saphanasr_status (8) も参照してください。</p>
+<blockquote>
+<p># watch -n9 "crm_mon -1r --include=none,nodes,resources,failures;echo;SAPHanaSR-showAttr;cs_clusterstate -i|grep -v '#'"</p>
+</blockquote>
+<p><strong>* 1つのサイトでのHANAデータベースの停止の概要。</strong></p>
+<p>この手順は、スケールアップとスケールアウトに有効です。テイクオーバーは行われません。HANAデータベースを停止する必要がある場合は、この手順を使用する必要があります。HANAデータベースの停止は、Linuxクラスターの停止やOSのシャットダウンだけでは実行できません。これは特にスケールアウトシステムに当てはまる。停止する必要があるHANAサイトを事前に定義することをお勧めします。両方のサイトを停止する必要がある場合は、順序を定義するとよいでしょう。最初にプライマリを停止すると、システム複製の同期が維持されます。<br />
+停止にかかる時間は、データベースのサイズ、基になるインフラストラクチャのパフォーマンス、SAP HANAのバージョンと構成によって異なります。HANAデータベースのチューニングと停止の詳細については、SAP HANAのドキュメントを参照してください。</p>
+<blockquote>
+<p>1. LinuxクラスターとHANAシステムのレプリケーションペアの状態を確認します。<br />
+2. SAPHana または SAPHanaController のマルチステート リソースをメンテナンスに設定します。<br />
+3. "sapcontrol -nr <nr> -function StopSystem" を使用して、指定されたサイトの HANA データベースを停止します。<br />
+4. Checking that HANA is stopped.</p>
+</blockquote>
+<p>注意: HANA データベースを再起動した後は、リソースのメンテナンスを終了することを忘れないでください。</p>
+<p><strong>* Linux クラスターを使用して、あるノードから別のノードへの HANA プライマリの管理テイクオーバーを開始します。</strong></p>
+<p>この手順はスケールアウトには機能しません。スケールアップ時には、HANAプライマリが停止します。これには時間がかかる場合があります。停止したプライマリを待機したくない場合は、以下の手順でプライマリを一時停止してください。クラスターが以前のプライマリをセカンダリとしても登録する必要がある場合は、AUTOMATED_REGISTER="true" を指定する必要があります。テイクオーバーを開始する前に、LinuxクラスターとHANAシステムレプリケーションのステータスを確認する必要があります。テイクオーバーは、マルチステートSAPHanaControllerリソースの強制移行として開始する必要があります。<br />
+機能しないもの: 通常の移行、IP アドレスの移行、プリミティブ SAPHanaController リソースの移行、プライマリ ノードのスタンバイの設定。<br />
+プライマリのテイクオーバーが完了したら、移行ルールを削除する必要があります。AUTOMATED_REGISTER="true" が設定されている場合、移行ルールが削除されると、元のプライマリは最終的にセカンダリとして登録されます。</p>
+<blockquote>
+<p># crm_mon -1r<br />
+# SAPHanaSR-showAttr<br />
+# crm configure show | grep cli-<br />
+# cs_clusterstate -i<br />
+# crm resource move mst_SAPHanaCon_SLE_HDB10 force<br />
+# cs_clusterstate -i<br />
+# SAPHanaSR-showAttr<br />
+# crm resource clear mst_SAPHanaCon_SLE_HDB10<br />
+# SAPHanaSR-showAttr<br />
+# cs_clusterstate -i</p>
+</blockquote>
+<p>注意: Linux クラスターの以前のバージョンでは、「move」の代わりに「migrate」を使用し、「clear」の代わりに「unmigrate」を使用していました。</p>
+<p><strong>* SAP ツールを使用して SAP HANA のテイクオーバーを実行します。</strong></p>
+<p>ここではスケールアウトの手順を説明します。スケールアップにも適用できます。この手順では、HANAプライマリを停止します。これには時間がかかる場合があります。停止したプライマリを待たずに済むようにするには、以下のプライマリを一時停止する手順を使用してください。HANAデータベース、システムレプリケーション、Linuxクラスタのステータスを確認する必要があります。SAP HANAリソースをメンテナンスモードに設定し、sr_takeoverを実行し、古いプライマリを新しいセカンダリとして登録します。そのため、正しいセカンダリサイト名を使用する必要があります（後述の例を参照）。最後に、SAP HANAリソースをLinuxクラスタに戻します。正しいサイト名の決定については、以下の「要件」セクションと後述の例も参照してください。</p>
+<blockquote>
+<p>1. 両方のノードで実行</p>
+</blockquote>
+<blockquote>
+<p># crm_mon -1r<br />
+# SAPHanaSR-showAttr<br />
+# crm configure show | grep cli-<br />
+# cs_clusterstate -i<br />
+すべて問題がなければ、続行します。<br />
+# crm resource maintenance mst_SAPHanaCon_SLE_HDB10<br />
+# crm_mon -1r</p>
+</blockquote>
+<blockquote>
+<p>2. On the HANA primary master nameserver (e.g. node11)</p>
+</blockquote>
+<blockquote>
+<p># su - sleadm<br />
+~&gt; sapcontrol -nr 10 -function StopSystem HDB<br />
+~&gt; sapcontrol -nr 10 -function GetSystemInstanceList</p>
+</blockquote>
+<blockquote>
+<p><strong>HANA プライマリがダウンしていることを確認してから続行してください！</strong></p>
+</blockquote>
+<blockquote>
+<p>3. On the HANA secondary master nameserver (e.g. node21)</p>
+</blockquote>
+<blockquote>
+<p># su - sleadm<br />
+~&gt; hdbnsutil -sr_takeover<br />
+~&gt; cdpy; python3 ./systemReplicationStatus.py; echo RC:$?<br />
+~&gt; cdpy; python3 ./landscapeHostConfiguration.py; echo RC:$?<br />
+すべて問題がなければ、続行します。</p>
+</blockquote>
+<blockquote>
+<p>4. 以前の HANA プライマリ マスター ネームサーバー、現在の将来のセカンダリ マスター ネームサーバー (例: node11)</p>
+</blockquote>
+<blockquote>
+<p>~&gt; hdbnsutil -sr_register --remoteHost=node21 --remoteInstance=10 --replicationMode=sync --name=site2 --operationMode=logreplay<br />
+~&gt; sapcontrol -nr 10 -function StartSystem HDB<br />
+~&gt; exit<br />
+</p>
+</blockquote>
+<blockquote>
+<p>5. 新しいHANAプライマリマスターネームサーバー（例：node21）</p>
+</blockquote>
+<blockquote>
+<p><br />
+~&gt; cdpy; python3 ./systemReplicationStatus.py; echo RC:$?<br />
+~&gt; cdpy; python3 ./landscapeHostConfiguration.py; echo RC:$?<br />
+~&gt; exit<br />
+すべて問題がなければ、続行します。</p>
+</blockquote>
+<blockquote>
+<p>6. 両方のノードで実行</p>
+</blockquote>
+<blockquote>
+<p><br />
+# cs_clusterstate -i<br />
+# crm resource refresh mst_SAPHanaCon_SLE_HDB10<br />
+# crm resource maintenance mst_SAPHanaCon_SLE_HDB10 off<br />
+# SAPHanaSR-showAttr<br />
+# crm_mon -1r<br />
+# cs_clusterstate -i</p>
+</blockquote>
+<p><strong>* SAP ツールを使用した SAP HANA のテイクオーバーとプライマリ一時停止機能の概要。</strong></p>
+<p>この手順はスケールアップとスケールアウトの両方に有効です。SAP HANAデータベース、システムレプリケーション、Linuxクラスタのステータスを確認する必要があります。SAP HANAリソースをメンテナンスモードに設定し、プライマリをサスペンドしてsr_takeoverを実行し、古いプライマリを新しいセカンダリとして登録します。そのため、正しいセカンダリサイト名を使用する必要があります。最後に、SAP HANAリソースをLinuxクラスタに戻します。以下の「要件」セクションと、後述の正しいサイト名の決定例も参照してください。</p>
+<blockquote>
+<p>1. Linux クラスターと HANA のステータスを確認し、現在のサイト名を表示します。<br />
+2. SAPHanaController マルチステートリソースをメンテナンスモードに設定します。<br />
+3. テイクオーバーを実行します。プライマリノードのサスペンド機能を使用してください。</p>
+</blockquote>
+<blockquote>
+<p>~&gt; hdbnsutil -sr_takeover --suspendPrimary</p>
+</blockquote>
+<blockquote>
+<p>4. 新しいプライマリが動作しているかどうかを確認します。<br />
+5. 一時停止中の古いプライマリを停止します。<br />
+6. 古いプライマリを新しいセカンダリとして登録します。正しいサイト名を使用していることを確認してください。<br />
+7. 新しいセカンダリを起動します。<br />
+8. 新しいセカンダリとそのシステムレプリケーションを確認します。<br />
+9. SAPHanaController マルチステートリソースを更新します。<br />
+10. SAPHanaController マルチステートリソースを管理対象に設定します。<br />
+11. 最後に、Linux クラスターと HANA のステータスを確認します。</p>
+</blockquote>
+<p><strong>* Linux クラスターに認識されている 2 つのサイト名を確認します。</strong> </p>
+<p>これは、AUTOMATED_REGISTER がまだ設定されていない場合に便利です。その場合、以前のプライマリを、以前のサイト名で新しいセカンダリとして手動で登録する必要があります。ポイントは、Linux クラスターで既に使用されているサイト名を見つけることです。新しいセカンダリの登録には、その正確なサイト名を使用する必要があります。SAPHanaSR(7) および SAPHanaSR-ScaleOut(7) の要件も参照してください。<br />
+この例では、登録する将来のセカンダリサイトのノードは suse11 です。リモート HANA マスターネームサーバーは、現在のプライマリサイトの suse21 です。小文字の SID は ha1 です。</p>
+<blockquote>
+<p># crm configure show suse11 suse21<br />
+# crm configure show SAPHanaSR | grep hana_ha1_site_mns<br />
+# ssh suse21<br />
+# su - ha1adm -c "hdbnsutil -sr_state; echo rc: $?"<br />
+# exit</p>
+</blockquote>
+<p><strong>* 利用可能なサイトが 1 つしかない場合は、HANA プライマリを手動で起動してください。</strong></p>
+<p>クラスターが両方のサイトのステータスを検出できない場合に、この操作が必要になることがあります。これは高度なタスクです。</p>
+<p><strong>この操作を行う前に、もう一方のサイトで HANA がプライマリになっていないことを確認してください。</strong></p>
+<blockquote>
+<p>1. 残りのノードでクラスターを起動します。<br />
+2. クラスターが実行中であり、ステータスがアイドル状態であることを確認します。<br />
+3. sidadm になり、HANA を手動で起動します。<br />
+4. HANA が実行中であることを確認します。<br />
+5. クラスターが HANA をプライマリに昇格しない場合は、IP アドレスをそのノードに移行するようにクラスターに指示します。<br />
+6. クラスターによって HANA がプライマリに昇格されたことを確認し、待機します。<br />
+7. IP アドレスから移行ルールを削除します。<br />
+8. クラスターがアイドル状態であることを確認します。<br />
+9. これで完了です。<br />
+10. 他のノードを戻して、できるだけ早く HANA を登録してください。HANA プライマリが長時間放置されると、ログ領域がいっぱいになります。</p>
+</blockquote>
+<p><strong>* ノードがフェンスされた後に Linux クラスターを起動します。</strong></p>
+<p>Linux クラスターは、起動時に常に自動的に起動するように設定しないことをお勧めします。クラスターまたはノードが正常に停止した場合にのみ自動的に起動するように設定することをお勧めします。ノードが STONITH によって再起動された場合、クラスターは自動的に起動しません。クラスターがそのように構成されている場合、ノードが STONITH によって再起動された後にクラスターを起動するには、いくつかの手順が必要です。この例では、SBD 経由の STONITH を使用しています。</p>
+<blockquote>
+<p># cs_clear_sbd_devices --all<br />
+# cs_show_sbd_devices<br />
+# crm cluster start<br />
+# crm_mon -r</p>
+</blockquote>
+<p><strong>* Linux のメンテナンス手順の概要（HANA は Pacemaker-2.0 上で稼働中）</strong></p>
+<p>各手順が完了するまで待機し、結果を確認する必要があります。また、本番環境に適用する前に、手順全体をテストし、文書化する必要があります。以下の「要件」セクションと、上記の HANA とクラスターのステータス確認例も参照してください。</p>
+<blockquote>
+<p>1. Linux クラスターと HANA のステータスを確認します（上記を参照）。<br />
+2. HANA マルチステート リソースをメンテナンス モードに設定します。</p>
+</blockquote>
+<blockquote>
+<p># crm resource maintenance mst_... on</p>
+</blockquote>
+<blockquote>
+<p>3. いずれかのノードで、Linux クラスターをメンテナンス モードに設定します。</p>
+</blockquote>
+<blockquote>
+<p># crm maintenance on</p>
+</blockquote>
+<blockquote>
+<p>4. すべてのノードでLinux Clusterを停止します。すべてのノードで必ず実行してください。</p>
+</blockquote>
+<blockquote>
+<p># crm cluster run "crm cluster stop"</p>
+</blockquote>
+<blockquote>
+<p>5. Linux のメンテナンスを実行します。</p>
+<p>6. すべてのノードで Linux クラスターを起動します。すべてのノードで必ず実行してください。</p>
+</blockquote>
+<blockquote>
+<p># crm cluster run "crm cluster start"</p>
+</blockquote>
+<blockquote>
+<p>7. いずれかのノードでクラスターを操作可能な状態に設定します。</p>
+</blockquote>
+<blockquote>
+<p># crm maintenance off</p>
+</blockquote>
+<blockquote>
+<p>8. Linux クラスターがいずれかのノードで HANA マルチステート リソースのステータスを検出できるようにします。</p>
+</blockquote>
+<blockquote>
+<p># crm resource refresh mst_...</p>
+</blockquote>
+<blockquote>
+<p>9. いずれかのノードで、HANA マルチステート リソースを操作可能に設定します。</p>
+</blockquote>
+<blockquote>
+<p># crm maintenance mst_... off</p>
+</blockquote>
+<blockquote>
+<p>10. Linux クラスターと HANA のステータスを確認します (上記を参照)。</p>
+</blockquote>
+<p><strong>* Linux クラスターを停止し、一時的に無効化するための簡単な手順の概要。HANA は完全に停止します。</strong></p>
+<p>この手順は、HANA、OS、またはハードウェアを更新するために使用できます。HANA のロールとリソースのステータスは変更されません。各ステップが完了するまで待機し、結果を確認する必要があります。また、本番環境に適用する前に、手順全体をテストし、文書化する必要があります。</p>
+<blockquote>
+<p>1. HANAプライマリでPacemakerを無効にする<br />
+2. HANAセカンダリでPacemakerを無効にする<br />
+3. HANAセカンダリでクラスターを停止する</p>
+<blockquote>
+<p>- HANA セカンダリが停止します<br />
+- システムレプリケーションがSFAILになる</p>
+</blockquote>
+<p>4. HANAプライマリのクラスタを停止する</p>
+<blockquote>
+<p>- HANA プライマリが停止されます</p>
+</blockquote>
+<p>5. OS またはハードウェアで何らかの操作を行う<br />
+6. HANA プライマリで Pacemaker を有効にする<br />
+7. HANA セカンダリで Pacemaker を有効にする<br />
+8. HANA プライマリでクラスターを起動する</p>
+<blockquote>
+<p>- HANAはダウンしたまま</p>
+</blockquote>
+<p>9. HANAセカンダリ上のクラスタを起動する</p>
+<blockquote>
+<p>- HANA プライマリとセカンダリが起動します<br />
+- システムレプリケーションが SOK に回復します</p>
+</blockquote>
+<p>注: ステップ 4 からステップ 9 までは HANA は使用できません。</p>
+</blockquote>
+<p><strong>* SAPHanaSR-angi パッケージの更新手順の概要</strong></p>
+<p>この手順は、HANA と Linux クラスターがオンラインのまま、RA、HANA HADR プロバイダーのフックスクリプト、および関連ツールを更新するために使用できます。HANA HADR プロバイダーの再ロードの詳細については、SAPHanaSR-manageAttr(8) も参照してください。</p>
+<blockquote>
+<p>1. Linux クラスターと HANA のステータスを確認します（上記を参照）。<br />
+2. リソース SAPHanaController と SAPHanaTopology をメンテナンスに設定します。<br />
+3. すべてのクラスターノードで RPM を更新します。<br />
+4. 両方のサイトで HANA HADR プロバイダーのフックスクリプトを再ロードします。<br />
+5. リソース SAPHanaController と SAPHanaTopology を更新します。<br />
+6. リソース SAPHanaController と SAPHanaTopology をメンテナンスから管理対象に設定します。<br />
+7. Linux クラスターと HANA のステータスを確認します（上記を参照）。</p>
+</blockquote>
+<p><strong>* Linux クラスター全体から、残っているメンテナンス属性を削除します。</strong></p>
+<p>これは、異なるメンテナンス手順による混乱を避けるために行うことができます。稼働中の Linux クラスターでのメンテナンス手順については、上記の概要を参照してください。これを行う前に、クラスター属性 maintenance-mode="false" を確認してください。</p>
+<blockquote>
+<p># SAPHanaSR-showAttr<br />
+# crm_attribute --query -t crm_config -n maintenance-mode<br />
+# crm_attribute --delete -t crm_config -n maintenance-mode<br />
+# SAPHanaSR-showAttr</p>
+</blockquote>
+<p><strong>* Linux クラスターノードから、残っているスタンバイ属性を削除します。</strong></p>
+<p>これは、異なるメンテナンス手順による混乱を避けるために実行できます。稼働中の Linux クラスターでのメンテナンス手順については、上記の概要を参照してください。すべてのノードでこの操作を実行する前に、すべてのノードでノード属性が standby="off" になっていることを確認してください。</p>
+<blockquote>
+<p># SAPHanaSR-showAttr<br />
+# crm_attribute --query -t nodes -N node1 -n standby<br />
+# crm_attribute --delete -t nodes -N node1 -n standby<br />
+# SAPHanaSR-showAttr</p>
+</blockquote>
+<p><strong>* リソースから残っているメンテナンス属性を削除します。</strong></p>
+<p>通常、これは不要です。稼働中のLinuxクラスターでのメンテナンス手順については、上記の概要を参照してください。</p>
+<blockquote>
+<p># SAPHanaSR-showAttr<br />
+# crm_resource --resource cln_SAPHanaTop_HA1_HDB00 --delete-parameter maintenance --meta<br />
+# SAPHanaSR-showAttr</p>
+</blockquote>
+<p><strong>* グローバル サイト属性を手動で更新します。</strong></p>
+<p>稀に、テイクオーバーが成功した後、他のすべての属性は正しく更新されているにもかかわらず、グローバルサイト属性 hana_<sid>_glob_prim または hana_<sid>_glob_sec が自動的に更新されないことがあります。Linux クラスターがしばらくアイドル状態になった後も、グローバルサイト属性は古いままです。この場合、そのサイト属性は手動で更新できます。他のすべての属性に問題がなく、グローバルサイト属性のみが更新されていないことを確認してください。サイト名 VOLKACH の SID HA1 の hana_<sid>_glob_sec を更新しています。</p>
+<blockquote>
+<p># crm configure show SAPHanaSR<br />
+# crm_attribute --type crm_config --set-name SAPHanaSR --name hana_ha1_glob_sec --update VOLKACH<br />
+# crm configure show SAPHanaSR</p>
+</blockquote>
+<p><strong>* スケールアウト srHook 属性を旧スタイルからマルチターゲットにアップグレードします。</strong></p>
+<p>このアップグレードの最終結果として、RA とフックスクリプトが旧スタイルからマルチターゲットにアップグレードされます。さらに、Linux クラスターの旧スタイルのグローバル srHook 属性 hana_${sid}_glob_srHook は、サイト対応属性 hana_${sid}_site_srHook_${SITE} に置き換えられます。新しい補助属性が導入されます。手順全体と関連要件については、マニュアルページ SAPHanaSR-manageAttr(8) で詳しく説明されています。<br />
+手順の概要:</p>
+<blockquote>
+<p>a. 最初に、すべてが正常に動作しているかどうかを確認します。<br />
+b. Linux クラスターリソースの SAPHanaController と SAPHanaTopology をメンテナンスモードに設定します。<br />
+c. すべてのノードにマルチターゲット対応の SAPHanaSR-ScaleOut パッケージをインストールします。<br />
+d. すべてのノードで sudoers 権限を適用します。<br />
+e. 両サイトで HANA HADR プロバイダーの設定を置き換えます。<br />
+f. 両サイトで HANA HADR プロバイダーのフックスクリプトを再読み込みします。<br />
+g. Linux クラスターと HANA HADR プロバイダーが、定義済みのアップグレードエントリ状態と一致していることを確認します。<br />
+h. srHook 属性を旧スタイルからマルチターゲットに移行します。<br />
+i. Linux クラスターが、定義済みのアップグレードターゲット状態と一致していることを確認します。<br />
+j. Linux クラスターリソースの SAPHanaController と SAPHanaTopology をメンテナンスモードから管理対象モードに設定します。<br />
+k. 必要に応じて、Linux クラスター外部のシステムレプリケーションを介して 3 番目の HANA サイトを接続します。<br />
+l.最後に、すべてが正常かどうかを確認します。</p>
+</blockquote>
+<h1>FILES</h1>
+<h1>REQUIREMENTS</h1>
+<p><br />
+<strong>*</strong> ソフトウェアパッケージ SAPHanaSR-angi に付属するリソースエージェントの現在のバージョンでは、サポートはそれぞれのマニュアルページ SAPHanaSR-angi(7)、SAPHanaSR(7)、および SAPHanaSR-ScaleOut(7) に記載されているシナリオとパラメータに限定されます。</p>
+<p><strong>*</strong> しばらくお待ちください。Linux クラスターは、HANA の全体的なステータスを検出するために、HANA と設定された間隔およびタイムアウトに応じて、一定の時間を必要とします。</p>
+<p><strong>*</strong> 何かを行う前に、Linux クラスターのアイドル状態、残っている移行制約、リソース障害、HANA ランドスケープのステータス、および HANA SR のステータスを必ず確認してください。</p>
+<p><strong>*</strong> クラスター、ノード、およびリソースのメンテナンス属性を混在させることはできません。</p>
+<p><strong>*</strong> HA/DR プロバイダーイベントを CIB 属性に書き込むには、Linux クラスターが起動して実行されている必要があります。 Linux クラスタのメンテナンス後、現在の HANA SR ステータスは CIB srHook 属性と異なる場合があります。</p>
+<p><strong>*</strong> Linux クラスタ外での HANA プライマリの起動やテイクオーバーなど、HANA プライマリを手動でアクティブ化すると、プライマリ重複のリスクが生じます。特に HANA プライマリをアクティブ化する場合は、データの整合性についてユーザーが責任を負います。susTkOver.py(7) も参照してください。</p>
+<p><strong>*</strong> Linux クラスタによって制御される HANA システムレプリケーションを手動で無効化または登録解除する場合は、SAPHanaController リソースをメンテナンスモードにする必要があります。データの整合性についてユーザーが責任を負います。</p>
+<p><strong>*</strong> HANA サイト名は、RA が最初にアクティブ化されたときに自動的に検出されます。その後のすべての手動タスクでは、その正確なサイト名を使用する必要があります。</p>
+<p><strong>*</strong> HANA の実行中にクラスタまたは OS をシャットダウンするだけでは、有効なメンテナンス手順とは言えません。これは、特にスケールアウト クラスターでは望ましくない結果をもたらすことが知られています。</p>
+<h1>BUGS</h1>
+<p>In case of any problem, please use your favourite SAP support process to open a request for the component BC-OP-LNX-SUSE. Please report any other feedback and suggestions to <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6e080b0b0a0c0f0d052e1d1b1d0b400d0103">[email&#160;protected]</a>.</p>
+<h1>SEE ALSO</h1>
+<p><br />
+<strong>ocf_suse_SAPHanaTopology</strong>(7) , <strong>ocf_suse_SAPHanaController</strong>(7) , <strong>susHanaSR.py</strong>(7) , <strong>susHanaSrMultiTarget.py</strong>(7) , <strong>susCostOpt.py</strong>(7) , <strong>susTkOver.py</strong>(7) , <strong>susChkSrv.py</strong>(7) , <strong>SAPHanaSR-showAttr</strong>(8) , <strong>SAPHanaSR</strong>(7) , <strong>SAPHanaSR-ScaleOut</strong>(7) ,
+<strong>SAPHanaSR-manageAttr</strong>(8) , <strong>SAPHanaSR-manageProvider</strong>(8) , <strong>cs_clusterstate</strong>(8) , <strong>cs_show_saphanasr_status</strong>(8) , <strong>cs_wait_for_idle</strong>(8) , <strong>crm</strong>(8) , <strong>crm_simulate</strong>(8) , <strong>crm_mon</strong>(8) , <strong>crm_attribute</strong>(8) ,<br />
+https://documentation.suse.com/sbp/sap/ ,<br />
+https://www.suse.com/support/kb/doc/?id=000019253 ,<br />
+https://www.suse.com/support/kb/doc/?id=000019207 ,<br />
+https://www.suse.com/support/kb/doc/?id=000019142 ,<br />
+https://www.suse.com/c/how-to-upgrade-your-suse-sap-hana-cluster-in-an-easy-way/ ,<br />
+https://www.suse.com/c/tag/towardszerodowntime/ ,<br />
+https://help.sap.com/doc/eb75509ab0fd1014a2c6ba9b6d252832/1.0.12/en-US/SAP_HANA_Administration_Guide_en.pdf</p>
+<h1>AUTHORS</h1>
+<p><br />
+F.Herschel, L.Pinne.</p>
+<h1>COPYRIGHT</h1>
+<p>(c) 2017-2018 SUSE Linux GmbH, Germany.<br />
+(c) 2019-2025 SUSE LLC<br />
+This maintenance examples are coming with ABSOLUTELY NO WARRANTY.<br />
+For details see the GNU General Public License at http://www.gnu.org/licenses/gpl.html</p>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"93a00d1568edd417","version":"2025.4.0-1-g37f21b1","r":1,"token":"0357a45f23a943f08700f7f9af191ee6","serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}}}' crossorigin="anonymous"></script>
+</body>
+</html>

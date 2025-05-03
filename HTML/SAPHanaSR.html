@@ -1,0 +1,284 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2025-01-10" />
+  <title>SAPHanaSR</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">SAPHanaSR</h1>
+<p class="date">10 Jan 2025</p>
+</header>
+<h1>NAME</h1>
+<p>SAPHanaSR - スケールアップセットアップにおけるSAP HANAシステムレプリケーションの自動化。</p>
+<h1>DESCRIPTION</h1>
+<p><strong>Overview</strong></p>
+<p>このマニュアルページ SAPHanaSR には、スケールアップ設定における SAP HANA システムレプリケーション（SR）の自動化の設定と管理に関する情報が記載されています。スケールアウトについては、SAPHanaSR-ScaleOut(7) を参照し、SAPHanaSR-angi(7) も参照してください。</p>
+<p>システムレプリケーションは、データベースの障害を補うために、あるサイトから別のサイトへデータベースデータを複製するのに役立ちます。この動作モードでは、内部のSAP HANA高可用性（HA）メカニズムとLinuxクラスタが連携する必要があります。</p>
+<p>SAPHanaController RAは、SAP HANAデータベースインスタンスの実際のチェックを実行し、マルチステートリソースとして構成されます。2つのSAP HANAインスタンスを管理することは、リソースエージェントがインスタンスの起動/停止を制御することを意味します。さらにリソースエージェントは、ランドスケープホスト構成レベルでSAP HANAデータベースを監視することができます。この監視のために、リソースエージェントはSAPが提供するインターフェースに依存しています。HANAランドスケープのステータスが 「ERROR 」でない限り、Linuxクラスタは動作しません。Linuxクラスタの主な目的は、他のサイトへのテイクオーバーを処理することです。HANAのランドスケープステータスが、HANAが障害から回復できないことを示し、レプリケーションが同期している場合にのみ、Linuxは動作します。</p>
+<p>リソースエージェントの重要なタスクは、2つのSAP HANAデータベースの同期状態をチェックすることです。同期が 「SOK 」でない場合、プライマリに障害が発生しても、クラスタはセカンダリ側へのテイクオーバーを回避します。これはデータの一貫性を向上させるためです。</p>
+<p>リソースエージェントの他に、このパッケージにはHADRプロバイダーのフックスクリプトが含まれている。このフックスクリプトは、特定のイベント時にHANAから呼び出されます。重要なイベントの1つは、システムのレプリケーションが失われたときです。関連するフックスクリプトは、次のRAモニターを待たずに、直ちにHAクラスタに通知します。これにより、コーナーケースでもデータの一貫性が保証されます。フックスクリプトのもう1つの使用例は、HANAリソースがメンテナンスモードの場合に手動テイクオーバーを許可し、それ以外の場合は手動テイクオーバーをブロックすることです。これにより、二重プライマリ状況を防ぐことができます。</p>
+<p><strong>Scenarios</strong></p>
+<p>上記の概要の意味を説明するために、いくつかの重要な状況を以下に説明する。これはすべての状況を完全に説明するものではない。</p>
+<p>1. <strong>Site takeover after primary has failed</strong><br />
+これがHANA SRオートメーションの基本的な使用例です。<br />
+1. site_A is primary, site_B is secondary - they are in sync.<br />
+2. site_A crashes.<br />
+3. site_Bがテイクオーバーを行い、新しいプライマリとして実行される。Linuxクラスタは、他のアクションが開始される前に、常にsite_Bのノードがシャットオフされていることを確認する。</p>
+<p>2. <strong>二重プライマリーの防止</strong><br />
+クラスタが他のサイトについて何も知らない場合は、絶対にプライマリを開始してはなりません。最初のクラスタ起動時に、クラスタは、システムレプリケーションステータス（SOK）および最後のプライマリタイムスタンプ（LPT）を含む、有効なHANAシステムレプリケーション設定を検出する必要があります。これはデータの整合性を確保するために必要です。</p>
+<p>Tその合理的根拠を次のシナリオに示す：<br />
+1. site_A is primary, site_B is secondary - they are in sync.<br />
+2. site_A crashes （HANA がプライマリのままであることに注意してください）<br />
+3. site_Bがテイクオーバーを行い、新しいプライマリとして実行される。<br />
+4. ＊本番稼動によりノード2でデータが変更される＊<br />
+5. 管理者はまた、site_B上のクラスタを停止します（現在、内部的に2つのHANAがあり、両方はダウンとプライマリにマークされています）。<br />
+6. 管理者がsite_Aのクラスタを再起動したらどうなるだろうか？<br />
+6.1 site_Aは、site_Bの最初のフェンシング時間を待った後、自身のCIBを取る。<br />
+6.2 自分自身が(cold)状態だったプライマリであることと、セカンダリが存在することを認識する。<br />
+6.3 ステップ1.-&gt;2.（クラッシュ）の時点からHANAを起動するため、その間に変更されたデータはすべて失われます。<br />
+このため、Linuxクラスタでは再起動を禁止する必要がある。</p>
+<p>SAP HANA SRとLinuxクラスタの両方を完全に機能する状態に戻すには、2つのオプションがあります：<br />
+a) 管理者が両ノードを再び起動する<br />
+b) site_Bがまだダウンしている場合、管理者は手動でsite_Aのプライマリを起動する。<br />
+Linuxクラスタはこの管理者の決定に従う。どちらの場合も、管理者はできるだけ早くセカンダリを登録して起動する必要があります。これにより、DATABASE STUCKの結果としてのログ・パーティションがフルになるのを避けることができます。</p>
+<p>3. <strong>サイト障害およびTakeover後にセカンダリとして自動登録</strong><br />
+クラスタは、以前のプライマリデータベースを自動的にセカンダリとして登録するように設定できます。このオプションを設定すると、リソースエージェントはクラスタ/リソースの起動時に以前のプライマリデータベースをセカンダリとして登録します。</p>
+<p>4. <strong>テイクオーバーよりローカルでの再起動を優先する</strong><br />
+SAPHanaController RA では、プライマリランドスケープに障害が発生した後にセカンダリランドスケープに引き継ぐかどうかを設定できます。別の方法として、プライマリランドスケープに障害が発生した場合に再起動し、ローカルでの再起動が不可能になった場合にのみ引き継ぎを行います。ocf_suse_SAPHanaController(7) も参照してください。<br />
+現在の実装では、ランドスケープステータスが1(ERROR)を報告した場合にのみテイクオーバーできます。SAP HANAがまだローカル障害の修復を試みている場合、クラスタはテイクオーバーしません。</p>
+<p><strong>Implementation</strong></p>
+<p>2つのHANAデータベースシステム（プライマリサイトとセカンダリサイト）は、同じ単一のLinuxクラスタによって管理される。その単一のLinuxクラスタのノード数は通常2台です。</p>
+<p>HANAは、それぞれ1つのノードを持つ2つのサイトで構成されている。<br />
+注：別のシステムレプリケーション（別名マルチターゲットレプリケーション）を使用して、3つ目のHANAサイトを追加できます。これはクラスタによって許容されます。しかし、この追加ピースはクラスタによって管理されません。そのため、マルチターゲットセットアップでは、AUTOMATED_REGISTER機能はHANAのregister_secondaries_on_takeover機能を必要とします。</p>
+<p>全サイトの全ノードに共通のSTONITHメカニズムが設定されています.</p>
+<p>プライマリHANAデータベースシステムのIPアドレスはクラスタによって管理されているため、どのネームサーバー候補にアクセスするにも、その単一のIPアドレスのみが必要となります。</p>
+<p><strong>Best Practice</strong></p>
+<p><strong>*</strong> 2つの独立したコロシンク・リングを使用し、少なくとも1つはボンディング・ネットワーク上に置く。その結果、少なくとも3つの物理リンクになる。ユニキャストが望ましい。</p>
+<p><strong>*</strong> Stonith Block Device (SBD)を使用し、全サイトの全ノードでLUNを共有する。もちろん、ハードウェア・ウォッチドッグも併用する。</p>
+<p><strong>*</strong> Linuxクラスタ内のすべてのタイムアウトを、特にネットワーク、ストレージ、マルチパスといった基盤インフラのタイムアウトに合わせる。</p>
+<p><strong>*</strong> 機能テストを行う前に、すべてのノードでOSとLinuxクラスタのインストールを確認する。</p>
+<p><strong>*</strong> すべての保守手順だけでなく、カバーすべきすべてのシナリオのテストを慎重に定義し、実行し、文書化します。</p>
+<p><strong>*</strong> クラスター全体のテストを行う前に、LinuxクラスターなしでHANA機能をテストします。</p>
+<p><strong>*</strong> クラスター全体のテストを行う前に、HANAを使用せずに基本的なLinuxクラスター機能をテストします。</p>
+<p><strong>*</strong> 気長に。HANAの全体的な状態を検出するには、HANAと構成されている間隔とタイムアウトに応じて、Linuxクラスターに一定の時間が必要です。</p>
+<p><strong>*</strong> 何かを行う前に、Linuxクラスターのアイドル状態、残っている移行の制約、リソースエラー、およびHANAランドスケープの状態とHANA SRの状態を必ず確認してください。</p>
+<p><strong>*</strong> HANAプライマリを手動でアクティブ化すると、デュアルプライマリのリスクが生じます。ユーザーはデータの整合性に責任があります。susTkOver.py (7) も参照してください。</p>
+<h1>REQUIREMENTS</h1>
+<p>パッケージSAPHanaSR-angiの現在のバージョンでは、スケールアップ機能は次のシナリオとパラメーターに制限されます。</p>
+<p>1．システムレプリケーションを使用したHANAスケールアップクラスター。2つのHANAデータベースシステム (プライマリサイトとセカンダリサイト) は、1つのLinuxクラスターで管理されます。この単一のLinuxクラスタのノード数は2です。注意:3ノードのLinuxクラスタは可能ですが、現在のベストプラクティスではカバーされていません。</p>
+<p>2．sidadmなどの技術ユーザーとグループは、Linuxシステムでローカルに定義されます。ユーザがリモートサービスによって解決される場合は、ローカルキャッシュが必要です。sidadmの代替ユーザー (su) は、カスタマイズされたアクションやメッセージを使用せずに、信頼性の高い方法で動作する必要があります。サポートされているシェルはbashです。</p>
+<p>3．クラスタノード間の厳密な時刻同期 (NTPなど) 。Linuxクラスタのすべてのノードで同じタイムゾーンが設定されています。</p>
+<p>4. スケールアップについては、次のSAP HANA SRシナリオがSAPHanaSR-angiパッケージで可能です。SAPHanaSR-angi-scenarios (7) も参照してください。<br />
+4.1 performance-optimized (memory preload on secondary)<br />
+4.2 cost-optimized (e.g. with QA on secondary)<br />
+4.3 multi-tier with HANA 2.0 (replication chaining, third node connected to second one)<br />
+4.4 multi-target with HANA 2.0 (star replication, third node connected to primary one)<br />
+4.5 single-tenant or multi-tenant (MDC) for all of the above<br />
+4.6 multiple independent HANA SR pairs (MCOS) in one cluster<br />
+Note: For MCOS, there must be no constraints between HANA SR pairs.</p>
+<p>5. 5. Linuxクラスター内の2つのSAP HANAデータベース間で1つのシステムレプリケーションのみ。Linuxクラスター外のHANAデータベースへの最大1つのシステムレプリケーション。下記項目12も参照。</p>
+<p>6. レプリケーションモードは、制御レプリケーションの場合はsyncまたはsyncmemです。レプリケーションモードの非同期はサポートされていません。操作モードdelta_datashipping、logreplay、logreplay_readaccessがサポートされています。動作モードはlogreplayです。</p>
+<p>7. 両方のSAP HANAデータベースシステムのSAP識別子 (SID) とインスタンス番号 (INO) は同じです。</p>
+<p>8. SAP HANAに加えて、SAPホストエージェントをシステムにインストールして開始する必要があります。SystemVスタイルでは、sapinitスクリプトをアクティブにする必要があります。systemdスタイルの場合、サービスsaphostagentとSAP${SID}_${INO}は有効のままにできます。systemdのバージョンについては、OSのドキュメントを参照してください。SAP HANAのバージョンについては、SAPのドキュメントを参照してください。systemdスタイルのhostagentとSystemVスタイルのインスタンスを組み合わせることができます。ただし、1つのLinuxクラスター内のすべてのノードで同じスタイルを使用する必要があります。</p>
+<p>9. システム起動時のSAP HANAデータベースシステムの自動起動をオフにする必要があります。</p>
+<p>10. RAの監視操作はアクティブである必要があります.</p>
+<p>11. susHanaSR.pyまたはsusHanaSrMultiTarget.pyを有効にして、srConnectionChanged() のHA/DRプロバイダーフックを使用することは必須です。</p>
+<p>12. スケールアップの場合、現在のリソースエージェントは、HANAバージョン2.0 SPS05 rev.59.04以降のシステムレプリケーションでSAP HANAをサポートします。</p>
+<p>13. SAPHanaController RAとその他のリソース間のコロケーション制約は、RAのスコアリングに影響しない場合にのみ許可されます。ロケーションスコアリングは最終的にシステム複製ステータスに依存し、追加の制約によって上書きされてはなりません。したがって、SAPHanaControllerリソースが別のリソースに従うように強制するルールを定義することはできません。</p>
+<p>14. HA/DRプロバイダーイベントをCIB属性に書き込むには、Linuxクラスタが稼働している必要があります。現在のHANA SRの状態は、クラスターのメンテナンス後にCIB srHook属性と異なる場合があります。</p>
+<p>15. HANAシステムレプリケーションサイトがLinuxクラスターに認識されると、サイトを手動で登録するたびに、正確なサイト名を使用する必要があります。常に1つのサイトのみがプライマリ・レプリケーション・ソースとして構成される</p>
+<p>17. HANA機能セカンダリタイムトラベルはサポートされていません。.</p>
+<p>18. MDC構成では、HANAデータベースは、すべてのデータベースコンテナーを含む1つのシステムとして扱われます。したがって、クラスターの引き継ぎの決定は、個々のコンテナーの状態とは関係なく、完全な状態に基づいて行われます。</p>
+<p>19. 3つ目のHANAサイトがシステムレプリケーションによって接続されている場合、そのHANAは別のSUSE HAクラスターによって制御されません。その3番目のサイトがDRの場合にフォールバックHAクラスタの一部として動作する必要がある場合は、そのHAクラスタをスタンバイにする必要があります。</p>
+<p>21. RAM-tmpfs上のSAP HANA Fast Restart機能と永続メモリ上のHANAは、SUSE HAに対して透過的であれば使用できます。</p>
+<p>22. SAP HANAホスト名または仮想ホスト名はRFC-952に従う必要があります。</p>
+<p>23. SAP HANAサイト名の長さは2文字から32文字です。文字または数字で始まります。後続の文字にはダッシュとアンダースコアを含めることができます。ただし、アンダースコアは避けてください。</p>
+<p>24. SAPHanaController RA、SUSE HAクラスタ、およびいくつかのSAPコンポーネントには、読み取り/書き込みアクセスと、Linux/tmpファイルシステムに十分なスペースが必要です。</p>
+<p>25. SAP HANA Native Storage Extension (NSE) がサポートされています。重要なのは、この機能によってHANAトポロジやインターフェイスが変更されないことです。ネイティブストレージ拡張とは反対に、HANA拡張ノードはトポロジを変更しているため、現在はサポートされていません。詳細については、SAPのドキュメントを参照してください。</p>
+<p>26. Linuxユーザのrootシェルは/bin/bash、または bash と完全に互換性があるもの。</p>
+<p>27. Linuxクラスターによって制御されている間は、HANAデータベースに対して手動アクションを実行する必要はありません。すべての管理アクションをクラスタに合わせる必要があります。SAPHanaSR_maintenance_examples (7) も参照ください。</p>
+<h1>BUGS</h1>
+<p>In case of any problem, please use your favourite SAP support process to open a request for the component BC-OP-LNX-SUSE. Please report any other feedback and suggestions to <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d0b6b5b5b4b2b1b3bb90a3a5a3b5feb3bfbd">[email&#160;protected]</a>.</p>
+<h1>SEE ALSO</h1>
+<p><strong>SAPHanaSR-angi</strong>(7) , <strong>SAPHanaSR-angi-scenarios</strong>(7) , <strong>SAPHanaSR-ScaleOut</strong>(7) , <strong>ocf_suse_SAPHanaTopology</strong>(7) , <strong>ocf_suse_SAPHanaController</strong>(7) , <strong>ocf_heartbeat_IPaddr2</strong>(7) , <strong>SAPHanaSR_basic_cluster</strong>(7) , <strong>susHanaSR.py</strong>(7) , <strong>susHanaSrMultiTarget.py</strong>(7) , <strong>susCostOpt.py</strong>(7) , <strong>susTkOver.py</strong>(7) , <strong>susChkSrv.py</strong> (7) , <strong>SAPHanaSR-showAttr</strong>(8) , <strong>chrony.conf</strong>(5) , <strong>systemctl</strong>(1) , <strong>stonith</strong>(8) , <strong>sbd</strong>(8) , <strong>stonith_sbd</strong>(7) , <strong>stonith_admin</strong>(8) , <strong>crm</strong>(8) , <strong>corosync.conf</strong>(5) ,
+<strong>crm_no_quorum_policy</strong>(7) , <strong>saptune</strong>(8) , <strong>cs_show_hana_info</strong>(8) , <strong>supportconfig</strong>(8) , <strong>ha_related_suse_tids</strong>(7) , <strong>ha_related_sap_notes</strong>(7) ,<br />
+https://documentation.suse.com/sbp/sap/ ,<br />
+https://documentation.suse.com/sles-sap/ ,<br />
+https://www.suse.com/releasenotes/ ,<br />
+http://scn.sap.com/community/hana-in-memory/blog/2014/04/04/fail-safe-operation-of-sap-hana-suse-extends-its-high-availability-solution ,<br />
+http://scn.sap.com/docs/DOC-60334 ,<br />
+http://scn.sap.com/community/hana-in-memory/blog/2015/12/14/sap-hana-sps-11-whats-new-ha-and-dr--by-the-sap-hana-academy ,<br />
+https://wiki.scn.sap.com/wiki/display/ATopics/HOW+TO+SET+UP+SAPHanaSR+IN+THE+COST+OPTIMIZED+SAP+HANA+SR+SCENARIO+-+PART+I<br />
+https://blogs.sap.com/2020/01/30/sap-hana-and-persistent-memory/ ,<br />
+https://www.rfc-editor.org/rfc/rfc952</p>
+<h1>AUTHORS</h1>
+<p>A.Briel, F.Herschel, L.Pinne.</p>
+<h1>COPYRIGHT</h1>
+<p>(c) 2015-2017 SUSE Linux GmbH, Germany.<br />
+(c) 2018-2025 SUSE LLC<br />
+The package SAPHanaSR-angi comes with ABSOLUTELY NO WARRANTY.<br />
+For details see the GNU General Public License at http://www.gnu.org/licenses/gpl.html</p>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"939fff514d68d524","version":"2025.4.0-1-g37f21b1","r":1,"token":"0357a45f23a943f08700f7f9af191ee6","serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}}}' crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,379 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2024-11-14" />
+  <title>SAPHanaSR</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">SAPHanaSR</h1>
+<p class="date">14 Nov 2024</p>
+</header>
+<h1>NAME</h1>
+<p>SAPHanaSR_basic_cluster - SAP HANAシステムレプリケーションスケールアップ基本クラスター構成。</p>
+<h1>DESCRIPTION</h1>
+<p>SAP HANAシステムレプリケーションのスケールアップシナリオでは、特定の基本的なクラスター構成が必要です。これらの必要な設定に加えて、特定のニーズに対応する追加の設定がいくつかあります。いくつかのSAP HANA設定を適用することも有益な場合があります。</p>
+<p><strong>* CRM Basics</strong></p>
+<p><strong>default-resource-stickiness = 1000</strong></p>
+<p>crmの基本パラメータdefault-resource-stickinessは、リソースが現在実行されているノード上で取得する「stickiness」スコアを定義します。これにより、クラスターの移行中に緊急の必要がない限り、クラスターがリソースを移動することがなくなります。正しい値は、リソースの数、コロケーションルール、およびリソースグループによって異なります。特に、HANAプライマリマスターリソースに併置された追加のグループは、クラスターの決定に影響を与える可能性があります。値が高すぎると、不要なアクションだけでなく、有用なアクションも妨げられる可能性があります。これは、SAPHanaSRが内部スコアリングテーブルを使用して、HANAロールを適切なノードに配置するためです。<br />
+Mandatory, default 1.</p>
+<p><strong>failure-timeout = 86400</strong></p>
+<p>crm基本パラメータfailure-timeoutは、失敗したアクションをCIBに保持する時間を定義します。その後、障害レコードは削除されます。時間は秒単位で測定されます。後述のmigration-thresholdも参照してください。<br />
+Optional, no default.</p>
+<p><strong>migration-threshold = 5000</strong></p>
+<p>crm基本パラメータmigration-thresholdは、リソースが別のノードに移行される前に検出できるリソースのエラー数を定義します。 See also <strong>failure-timeout</strong>.<br />
+Mandatory, default 3.</p>
+<p><strong>record-pending = true</strong></p>
+<p>op_default record-pendingは、リソースに対するアクションの意図をクラスタ情報ベース (CIB) に記録するかどうかを定義します。このパラメータを「true」に設定すると、<strong>crm_mon</strong> and <strong>Hawk</strong>で「starting」や「stopping」などの保留中のアクションを表示できます。<br />
+Optional, default false.</p>
+<p><strong>pcmk_delay_max = 30</strong></p>
+<p>sbd stonithパラメータpcmk_delay_maxは、フェンシング/stonith要求がトリガーされるまでの待機の上限を定義します。このパラメーターは、spill-brainの場合にクラスターが不要な二重フェンスを防ぐ必要があります。優先フェンシングが使用される場合を除き、30秒前後の値が必要です。<br />
+Mandatory, default 5.</p>
+<p><strong>priority-fencing-delay = 30</strong></p>
+<p>オプションのcrmプロパティpriority-fencing-delayは、クラスタパーティション内のノードの大部分が存在しない場合に、合計リソースの優先度が最も高い失われたノードを対象とするフェンシングの遅延を指定します。これにより、より重要なノードがフェンシングの一致に勝つ可能性があります。これは、2ノードクラスターのスプリットブレインで特に意味があります。基本優先度が0でない場合、プロモートされたリソースインスタンスは計算時に基本優先度+1を取得します。対応するフェンシングリソースに対して設定されたpcmk_delay_maxによって導入された遅延は、この遅延に追加されます。これを機能させるには、SAPHanaControllerプリミティブリソースのmeta属性priority=100または同様の値が必要です。ocf_suse_SAPHanaController (7) を参照ください。遅延はpcmk_delay_maxよりかなり大きいか、安全に2倍でなければなりません。<br />
+Optional, no default.</p>
+<p><strong>* systemd Basics</strong></p>
+<p><strong>saphostagent.service enabled</strong><br />
+<strong>SAP${SID}_${INO}.service enabled</strong></p>
+<p>HANAデータベースにsystemdスタイルのinitを使用する場合、サービスsaphostagentとSAP${SID}_${INO}を有効にし、SAPスライス内で実行する必要があります。インスタンスプロファイルの自動開始機能をオフにする必要があります。サービスsaptuneを強く推奨します。saptune (8) のマニュアルページを参照してください。</p>
+<p><strong>* pacemaker service dependency to SAP instance service</strong></p>
+<p><strong>[Unit]</strong><br />
+<strong>Wants=SAP${SID}_${INO}.service</strong><br />
+<strong>After=SAP${SID}_${INO}.service</strong></p>
+<p>In case systemd-style init is used for the HANA database, it might be desired to have the SAP instance service stopping after pacemaker at system shutdown. Therefor a drop-in file for the pacemaker service might help. See examples below.</p>
+<p><strong>* pacemaker service basics</strong></p>
+<p><strong>PCMK_fail_fast = yes</strong></p>
+<p>HANAデータベースにsystemdスタイルのinitが使用されている場合は、システムのシャットダウン時にペースメーカーの後でSAPインスタンスサービスを停止することが望ましい場合があります。そのため、ペースメーカーサービス用のドロップインファイルが役に立つかもしれません。以下の例を参照してください。<br />
+Optional, default no.</p>
+<p><strong>* SAP HANA Basics</strong></p>
+<p><strong>/usr/sap/${SID}/SYS/global/hdb/custom/config/global.ini</strong></p>
+<p><strong>[memorymanager]</strong><br />
+<strong>final_memory_release_shutdown = [ auto | on | off ]</strong><br />
+<strong>final_memory_release_crash = [ auto | on | off ]</strong></p>
+<p>Starting with SAP HANA 2.0 SPS06, the database shutdown can be accelerated by optimizing memory de-allocation. Please refer to SAP documentation before setting this parameters.</p>
+<p><strong>/usr/sap/${SID}/SYS/global/hdb/custom/config/daemon.ini</strong></p>
+<p><strong>[daemon]</strong><br />
+<strong>terminationtimeout = [ </strong><em>millisec</em><strong>
+]</strong><br />
+<strong>forcedterminationtimeout = [ </strong><em>millisec</em><strong>
+]</strong></p>
+<p>最初のパラメーターは、STOPイベントによってHANAがシャットダウンされるときに、SIGTERMを送信してから最終的に子プロセスを終了するまでのタイムアウトを定義します。'restartterminationtimeout'パラメータが設定されていない場合、システム再起動の最大遅延としても使用されます。2つ目は、QUITイベントによってHANAがシャットダウンされるときに、SIGTERMを送信してから最終的に子プロセスを終了するまでのタイムアウトを定義します。このパラメータを設定する前に、SAPのマニュアルを参照してください。</p>
+<h1>EXAMPLES</h1>
+<p><strong>* crm basic configuration</strong></p>
+<p>SAPHanaSRのcrm基本設定の例を次に示します。必要な特定のパラメータを示します。一部の一般パラメータは省略されています。</p>
+<p>The following example is for 15 SP5 with disk-based SBD:</p>
+<blockquote>
+<p><br />
+property cib-bootstrap-options: \<br />
+have-watchdog=true \<br />
+cluster-infrastructure=corosync \<br />
+cluster-name=hacluster \<br />
+stonith-enabled=true \<br />
+placement-strategy=balanced \<br />
+stonith-timeout=144 \<br />
+rsc_defaults rsc-options: \<br />
+resource-stickiness=1000 \<br />
+migration-threshold=3 \<br />
+failure-timeout=86400<br />
+op_defaults op-options: \<br />
+timeout=600 \<br />
+record-pending=true</p>
+</blockquote>
+<p><strong>* crm simple SBD stonith configuration</strong></p>
+<p>SBDのセットアップを完了するには、CIBでSTONITH/フェンシングメカニズムとしてSBDをアクティブにする必要があります。SBDは通常、SAPHanaSRスケールアップのために他のフェンシング/石化機構の代わりに使用される。ベーシック・ディスク・ベースのSBDリソースの例:</p>
+<blockquote>
+<p>primitive rsc_stonith_sbd stonith:external/sbd \<br />
+params pcmk-delay-max=30</p>
+</blockquote>
+<p><strong>* crm priority fencing SBD stonith configuration</strong></p>
+<p>Example for a priority fencing disk-based SBD resource.</p>
+<blockquote>
+<p><br />
+primitive rsc_stonith_sbd stonith:external/sbd \<br />
+params pcmk-delay-max=15 \<br />
+property cib-bootstrap-options: \<br />
+priority-fencing-delay=30</p>
+</blockquote>
+<p><strong>* crm simple IP address resource configuration</strong></p>
+<p>Linuxクラスターで1つのIPアドレスを管理し、そのアドレスをHANAプライマリマスターネームサーバーと共に移動します。間隔とタイムアウトは、フレンドリ条件に設定されます。</p>
+<blockquote>
+<p><br />
+primitive rsc_ip_SLE_HDB00 IPaddr2 \<br />
+op monitor interval=10 timeout=20 \<br />
+params ip=192.168.178.188<br />
+colocation col_ip_with_SLE_HDB00 \<br />
+2000: rsc_ip_SLE_HDB00:Started mst_SAPHanaCon_SLE_HDB00:Promoted</p>
+</blockquote>
+<p><strong>* crm protective IP address resource configuration</strong></p>
+<p>Linuxクラスタに1つのIPアドレスを管理させます。リソースは、(仮想) ネットワークカードの短い不在を許容する必要があります。モニターとその結果の起動が失敗した場合、ノードはフェンスされます。これにより、HANAデュアルプライマリのリスクから保護されます。このIPアドレスリソースとHANAプライマリマスターネームサーバー間のコロケーション制約も必要です。それぞれの例を参照してください。</p>
+<blockquote>
+<p><br />
+primitive rsc_ip_SLE_HDB00 IPaddr2 \<br />
+op monitor interval=30 timeout=60 \<br />
+op start timeout=90 on-fail=fence \<br />
+params ip=192.168.178.188 cidr_netmask=32</p>
+</blockquote>
+<p>この構成は、仮想NICが一時的に消失する可能性があるパブリッククラウド環境で使用される場合があります。もちろん、本番環境でNICが消失しないようにすることをお勧めします。すなわち。ネットワークに冗長性を追加するか、クラスタをメンテナンス状態に設定します。</p>
+<p><strong>* crm IP address for active/active read-enabled resource configuration</strong></p>
+<p>Linuxクラスターで追加のIPアドレスを管理し、そのアドレスをHANAセカンダリマスターネームサーバーと共に移動します。</p>
+<blockquote>
+<p><br />
+primitive rsc_ip_ro_SLE_HDB00 IPaddr2 \<br />
+op monitor interval=10 timeout=20 \<br />
+params ip=192.168.178.199<br />
+colocation col_ip_ro_with_secondary_SLE_HDB00 \<br />
+2000: rsc_ip_ro_SLE_HDB00:Started mst_SAPHanaCon_SLE_HDB00:Demoted<br />
+location loc_ip_ro_not_master_SLE_HDB00 \<br />
+rsc_ip_ro_SLE_HDB00 \<br />
+rule -inf: hana_sle_roles ne master1:master:worker:master</p>
+</blockquote>
+<p><strong>* crm grouped IP address resource configuration</strong></p>
+<p>Linuxクラスターで1つのIPアドレスを管理し、そのアドレスをHANAプライマリマスターネームサーバーと共に移動します。特定のパブリッククラウドの目的には、補助リソースが必要です。</p>
+<p>リソースをHANAマスターロールにバインドしないでください。これにより、有効なリソーススコアリングが変更され、クラスターが期待どおりのアクションを実行できなくなる可能性があります。何らかの理由で追加のリソースをHANAリソースにバインドする必要がある場合は、その追加リソースの固定性を1に減らす必要があります。</p>
+<blockquote>
+<p><br />
+primitive rsc_ip_SLE_HDB00 IPaddr2 \<br />
+op monitor interval=10s timeout=20s \<br />
+params ip=192.168.178.188 cidr_netmask=32<br />
+primitive rsc_lb_SLE_HDB00 azure-lb \<br />
+params port=62502<br />
+group grp_ip_SLE_HDB00 rsc_lb_SLE_HDB00 rsc_ip_SLE_HDB00 \<br />
+meta resource-stickiness=1<br />
+colocation col_ip_with_SLE_HDB00 \<br />
+8000: grp_ip_SLE_HDB00:Started mst_SAPHanaCon_SLE_HDB00:Promoted</p>
+</blockquote>
+<p><strong>* crm MailTo resource configuration</strong></p>
+<p>HANAランドスケープの状態は、属性hana_<sid>_rolesとしてCIB内に格納されます。正常なHANAマスターは、"master1:master:worker:master"のようになります。最初のフィールドはHANAランドスケープの状態です。この状態が3または2になった場合、HANAに何かが発生していますが、クラスターはテイクオーバーを実行しません。ステータス1はテイクオーバーをトリガーし、ステータス0は未定義の致命的エラーを示します。マニュアルページocf_suse_SAPHanaController (7) およびocf_heartbeat_MailTo (7) を参照してください。</p>
+<p>属性hana_<sid>_rolesが上記の理想から逸脱するとすぐに通知するMailToリソースを定義できます。</p>
+<blockquote>
+<p>primitive rsc_mailto_HA1_HDB10 MailTo \<br />
+params email="root@localhost" subject="hana_ha1_roles changed" \<br />
+op monitor timeout=10 interval=30 depth=0 \<br />
+location loc_mailto_HA1_HDB10_with_sane rsc_mailto_HA1_HDB10 \<br />
+rule 90000: hana_ha1_roles eq master1:master:worker:master<br />
+colocation col_mailto_HA1_HDB10_with_prim \<br />
+3000: rsc_mailto_HA1_HDB10:Started mst_SAPHanaCon_HA1_HDB10:Promoted</p>
+</blockquote>
+<p><strong>* check how resource stickiness affects promotion scoring</strong></p>
+<p>SAPHanaSRは、内部スコアリングテーブルを使用します。HANAプライマリマスターとセカンダリマスターの昇格スコアは一定の範囲にあります。Linuxクラスターで使用されるスコアは、同じ範囲にある必要があります。</p>
+<blockquote>
+<p><br />
+# SAPHanaSR-showAttr | grep master.:master<br />
+# crm_simulate -Ls | grep promotion</p>
+</blockquote>
+<p><strong>* clean up SDB stonith resource after write failure</strong></p>
+<p>Iまれに、SBD stonithリソースがブロックデバイスへの書き込みに失敗することがあります。根本原因が見つかって修正されたら、エラーメッセージを消去できます。</p>
+<blockquote>
+<p><br />
+# stonith_admin --cleanup --history=&lt;originator_node&gt;</p>
+</blockquote>
+<p><strong>* check saphostagent and show SAP instances</strong></p>
+<p>Basic check for the saphostagent.</p>
+<blockquote>
+<p># /usr/sap/hostctrl/exe/saphostctrl -function Ping<br />
+# /usr/sap/hostctrl/exe/saphostctrl -function ListInstances</p>
+</blockquote>
+<p><strong>* check systemd services for the HANA database</strong></p>
+<p>HANAデータベースにsystemdスタイルのinitが使用されている場合は、サービスを確認できます。例SIDはHA1、インスタンス番号は10です。</p>
+<blockquote>
+<p><br />
+# systemctl list-unit-files | grep -i sap<br />
+# systemctl status SAPHA1_10.service<br />
+# systemd-cgls -u SAP.slice<br />
+# systemd-cgls -u SAPHA1_10.service<br />
+# systemctl show SAPHA1_10.service</p>
+</blockquote>
+<p><strong>* show pacemaker service drop-in file</strong></p>
+<p>HANAデータベースにsystemdスタイルのinitが使用されている場合は、システムのシャットダウン時にペースメーカーの後でSAPインスタンスサービスを停止することが望ましい場合があります。ドロップインファイルが役に立つかもしれません。例SIDはS07、インスタンス番号は00です。</p>
+<blockquote>
+<p># cat /etc/systemd/system/pacemaker.service.d/00-pacemaker.conf<br />
+[Unit]<br />
+Description=pacemaker needs SAP instance service<br />
+Documentation=man:SAPHanaSR_basic_cluster(7)<br />
+Wants=SAPS07_00.service<br />
+After=SAPS07_00.service</p>
+</blockquote>
+<p><strong>* check for pacemaker dependency to SAP instance service</strong></p>
+<p>Example SID is S07, instance number is 00.</p>
+<blockquote>
+<p># systemctl show pacemaker.service | grep SAPS07_00<br />
+# systemd-delta | grep pacemaker<br />
+# systemd-analyze dot | grep "pacemaker.*SAPS07_00"</p>
+</blockquote>
+<h1>BUGS</h1>
+<p>In case of any problem, please use your favourite SAP support process to open a request for the component BC-OP-LNX-SUSE. Please report any other feedback and suggestions to <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="fb9d9e9e9f999a9890bb888e889ed5989496">[email&#160;protected]</a>.</p>
+<h1>SEE ALSO</h1>
+<p><strong>ocf_suse_SAPHanaTopology</strong>(7) , <strong>ocf_suse_SAPHanaController</strong>(7) , <strong>ocf_suse_SAPHanaFilesystem</strong>(7) , <strong>ocf_heartbeat_IPaddr2</strong>(7) , <strong>ocf_heartbeat_MailTo</strong>(7) , <strong>sbd</strong>(8) , <strong>stonith_sbd</strong>(7) , <strong>stonith_admin</strong>(8) , <strong>crm_no_quorum_policy</strong>(7) , <strong>crm</strong>(8) , <strong>crm_simulate</strong>(8) , <strong>SAPHanaSR</strong>(7) , <strong>SAPHanaSR-showAttr</strong>(7) , <strong>corosync.conf</strong>(5) , <strong>votequorum</strong>(5) , <strong>nfs</strong>(5) , <strong>mount</strong>(8) , <strong>systemctl</strong>(1) , <strong>systemd-cgls</strong>(1) , <strong>systemd-analyze</strong>(1) , <strong>systemd-delta</strong>(1) , <strong>ha_related_suse_tids</strong>(7) , <strong>ha_related_sap_notes</strong>(7) ,<br />
+https://documentation.suse.com/sbp/sap/ ,<br />
+https://documentation.suse.com/sles-sap/ ,<br />
+https://www.suse.com/support/kb/ ,<br />
+https://www.clusterlabs.org</p>
+<h1>AUTHORS</h1>
+<p>A.Briel, F.Herschel, L.Pinne.</p>
+<h1>COPYRIGHT</h1>
+<p>(c) 2018 SUSE Linux GmbH, Germany.<br />
+(c) 2019-2024 SUSE LLC<br />
+For details see the GNU General Public License at http://www.gnu.org/licenses/gpl.html</p>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"93a00af74c9ad3c9","version":"2025.4.0-1-g37f21b1","r":1,"token":"0357a45f23a943f08700f7f9af191ee6","serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}}}' crossorigin="anonymous"></script>
+</body>
+</html>

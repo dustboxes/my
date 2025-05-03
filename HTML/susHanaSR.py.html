@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2025-01-10" />
+  <title>susHanaSR.py</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">susHanaSR.py</h1>
+<p class="date">10 Jan 2025</p>
+</header>
+<h1>NAME</h1>
+<p>susHanaSR.py - Provider for SAP HANA srHook method srConnectionChanged().</p>
+<h1>DESCRIPTION</h1>
+<p>susHanaSR.py can be used to provide a script for the SAP HANA srHook method srConnectionChanged().</p>
+<p>The SAP HANA nameserver provides a Python-based API ("HA/DR providers"), which is called at important points of the host auto-failover and system replication takeover process. These so called hooks can be used for arbitrary operations that need to be executed. The method srConnectionChanged() is called on the master nameserver as soon as one of the replicating services loses or establishes the system replication connection. This method is called only once.</p>
+<p>susHanaSR.py updates the cluster attribute srHook at changes of the HANA system replication status. Thus this attribute is more reliable than the attribute sync_state which is polled by RA monitors.</p>
+<p>This hook script needs to be configured and activated on all HANA nodes.</p>
+<h1>SUPPORTED PARAMETERS</h1>
+<p>* The "HA/DR providers" API accepts the following parameters for the ha_dr_provider_sushanasr section:</p>
+<dl>
+<dt><strong>[ha_dr_provider_sushanasr]</strong></dt>
+<dd>
+
+</dd>
+<dt><strong>provider = susHanaSR</strong></dt>
+<dd>
+<p>Mandatory. Must not be changed.</p>
+</dd>
+<dt><strong>path = /usr/share/SAPHanaSR-angi</strong></dt>
+<dd>
+<p>Mandatory. Please change only if requested.</p>
+</dd>
+<dt><strong>execution_order = [ INTEGER ]</strong></dt>
+<dd>
+<p>Mandatory. Order might depend on other hook scripts.</p>
+</dd>
+</dl>
+<p>* The "HA/DR providers" API accepts the following parameter for the trace section:</p>
+<dl>
+<dt><strong>[trace]</strong></dt>
+<dd>
+
+</dd>
+<dt><strong>ha_dr_sushanasr = [ info | debug ]</strong></dt>
+<dd>
+<p>Optional. Will be added automatically if not set.</p>
+</dd>
+</dl>
+<p>* The he SAPHanaController RA recognize the effecting system replication status via attributes in the CIB´s SAPHanaSR properties section. The SAP System Indentifier (sid) is given in lower case:</p>
+<dl>
+<dt><strong>hana_${sid}_site_srHook_${site} = [ SOK | SFAIL | SWAIT ]</strong></dt>
+<dd>
+
+</dd>
+<dt>Note: SAPHanaSR-ScaleOut comes with a SAPHanaSR.py that provides global attributes.</dt>
+<dd>
+
+</dd>
+</dl>
+<h1>RETURN CODES</h1>
+<p><strong>0</strong> Successful program execution.<br />
+<strong>&gt;0</strong> Usage, syntax or execution errors.</p>
+<h1>EXAMPLES</h1>
+<p><strong>*</strong> Example for entry in sudo permissions /etc/sudoers.d/SAPHanaSR</p>
+<blockquote>
+<p># SAPHanaSR needs for srHook<br />
+ha1adm ALL=(ALL) NOPASSWD: /usr/sbin/crm_attribute -n hana_ha1_site_srHook_*</p>
+</blockquote>
+<p><strong>*</strong> Example for looking up the sudo permission for the srHook script.<br />
+All related files (/etc/sudoers and /etc/sudoers.d/*) are scanned. Example SID is HA1.</p>
+<blockquote>
+<p># sudo -U ha1adm -l | grep "NOPASSWD.*crm_attribute.*hana_ha1"</p>
+</blockquote>
+<p><strong>*</strong> Example for checking HANA´s python version.<br />
+This might be done before installing HADR provider hook scripts. SID is HA1.</p>
+<blockquote>
+<p># su - ha1adm -c "python --version"</p>
+</blockquote>
+<p><strong>*</strong> Example for entry in SAP HANA global configuration /hana/shared/$SID/global/hdb/custom/config/global.ini<br />
+This file is needed at both sites. The HANA has to be stopped before the files can be edited.</p>
+<blockquote>
+<p>[ha_dr_provider_sushanasr]<br />
+provider = susHanaSR<br />
+path = /usr/share/SAPHanaSR-angi<br />
+execution_order = 1<br />
+[trace]<br />
+ha_dr_sushanasr = info</p>
+</blockquote>
+<p><strong>*</strong> Example for entry in SAP HANA 2.0 global configuration /hana/shared/$SID/global/hdb/custom/config/global.ini to enable multi-target aware third site.<br />
+This entry is needed to allow ocf_suse_SAPHanaController(7) parameter AUTOMATED_REGISTER=true in multi-target environments. The HANA has to be stopped before the files can be edited. Do not copy the file between nodes. Please check SAP HANA documentation for details.</p>
+<blockquote>
+<p>[system_replication]<br />
+...<br />
+register_secondaries_on_takeover = true<br />
+...</p>
+</blockquote>
+<p>* Example for entry in SAP HANA 2.0 nameserver configuration /hana/shared/$SID/global/hdb/custom/config/nameserver.ini for two-node scale-out HANA without standby nodes.<br />
+This entry is needed at both sites that are managed by the Linux cluster. The HANA has to be stopped before the files can be edited. Do not copy the file between nodes. It might be necessary to un-register and re-register the secondary to make the change effective on the secondary site. Please check SAP HANA documentation for details. In this example the master node is suse11, the worker is suse12, the instance number is 00. See also SAPHanaSR-ScaleOut_basic_cluster(7).</p>
+<blockquote>
+<p>[landscape] ...<br />
+master = suse11:31001<br />
+worker = suse11 suse12<br />
+active_master = suse11:31001<br />
+roles_suse11 = worker<br />
+roles_suse12 = worker ...</p>
+</blockquote>
+<p><strong>*</strong> Example for checking the system log for srHook setting HANA system replication status in the CIB properties section.<br />
+To be executed on respective HANA primary site's master nameserver.</p>
+<blockquote>
+<p># grep "sudo.*crm_attribute.*srHook" /var/log/messages</p>
+</blockquote>
+<p><strong>*</strong> Example for checking the HANA tracefiles for srConnectionChanged() events.<br />
+To be executed on respective HANA primary site's master nameserver.</p>
+<blockquote>
+<p># su - sleadm<br />
+~&gt; cdtrace<br />
+~&gt; grep susHanaSR.srConnectionChanged.*called nameserver_*.trc<br />
+~&gt; grep susHanaSR.*crm_attribute nameserver_*.trc<br />
+# exit</p>
+</blockquote>
+<p><strong>*</strong> Example for checking the HANA tracefiles for when the hook script has been loaded.<br />
+To be executed on both sites' master nameservers.</p>
+<blockquote>
+<p># su - sleadm<br />
+~&gt; cdtrace<br />
+~&gt; grep HADR.*load.*susHanaS nameserver_*.trc</p>
+</blockquote>
+<p><strong>*</strong> Example for comparing Linux cluster srHook attribute with current HANA SR state.<br />
+SID is HA1. To be executed on current HANA primary site.</p>
+<blockquote>
+<p># SAPHanaSR-showAttr | grep -A4 srHook<br />
+# su - ha1adm -c "HDBSettings.sh systemReplicationStatus.py"</p>
+</blockquote>
+<p><strong>*</strong> Potentially dangerous example for manually changing Linux cluster srHook attribute according to current HANA SR state.<br />
+This might be desired if the HANA SR state has changed while the Linux cluster was completely down. SID is ICE, site is BERG, current HANA SR state is SFAIL.<br />
+Note: Understand the impact before trying.</p>
+<blockquote>
+<p># su - iceadm -c "HDBSettings.sh systemReplicationStatus.py"<br />
+# cs_clusterstate -i<br />
+# crm_attribute -n hana_ice_site_srHook_BERG -v SFAIL -t crm_config -s SAPHanaSR<br />
+# SAPHanaSR-showAttr</p>
+</blockquote>
+<p><strong>*</strong> Example for removing orphaned global srHook attribute.<br />
+This might be done after upgrading from old-style srHook, to avoid confusion caused by different HANA HADR provider API versions. SID is HA1.</p>
+<blockquote>
+<p># SAPHanaSR-showAttr<br />
+# crm configure show SAPHanaSR<br />
+# cs_clusterstate -i<br />
+# crm_attribute --delete -t crm_config --name hana_ha1_glob_srHook<br />
+# crm configure show SAPHanaSR<br />
+# SAPHanaSR-showAttr</p>
+</blockquote>
+<p><strong>*</strong> Example for temporarily blocking HANA system replication.<br />
+This could be done for testing the HA/DR provider hook script integration. Blocking the HANA system replication is dangerous. This test should not be done on production systems. Instance number is 00, the resulting network ports are depending on the HANA setup. Please refer to SAP HANA documentation. See also manual page iptables(8).<br />
+Note: Understand the impact before trying.</p>
+<p>1. Check HANA and Linux cluster for clean idle state.</p>
+<p>2. On secondary, check for used network ports.</p>
+<blockquote>
+<p># ss -tulpan | grep hdb.*server | grep -v 127.0.0.1 |\<br />
+grep -v "\*" | awk '{print $6}' | awk -F: '{print $2}'</p>
+</blockquote>
+<p>3. On secondary, block HANA system replication, example ports are 4000[123].</p>
+<blockquote>
+<p># iptables -I INPUT -p tcp -m multiport --ports 40001,40002,40003 -j ACCEPT</p>
+</blockquote>
+<p>Note: The ACCEPT needs to be replaced by appropriate action.</p>
+<p>4. Check the nameserver tracefile for srConnectionChanged() events, check the system log for crm_attribute calls, check the Linux cluster attributes for srHook status.</p>
+<p>5. On secondary, unblock HANA system replication.</p>
+<blockquote>
+<p># iptables -D INPUT -p tcp -m multiport --ports 40001,40002,40003 -j DROP</p>
+</blockquote>
+<p>6. Check the nameserver tracefile for srConnectionChanged() events, check the system log for crm_attribute calls, check the Linux cluster attributes for srHook status.</p>
+<p>7. Check HANA and Linux cluster for clean idle state.</p>
+<h1>FILES</h1>
+<dl>
+<dt>/usr/share/SAPHanaSR-angi/susHanaSR.py</dt>
+<dd>
+<p>the hook provider, delivered with the RPM</p>
+</dd>
+<dt>/hana/shared/$SID/global/hdb/custom/config/global.ini</dt>
+<dd>
+<p>the on-disk representation of HANA global system configuration</p>
+</dd>
+<dt>/hana/shared/$SID/global/hdb/custom/config/nameserver.ini</dt>
+<dd>
+<p>the on-disk representation of HANA nameserver configuration</p>
+</dd>
+<dt>/etc/sudoers , /etc/sudoers.d/*</dt>
+<dd>
+<p>the sudo permissions configuration</p>
+</dd>
+<dt>/usr/sap/$SID/HDB$nr/$HOST/trace</dt>
+<dd>
+<p>path to HANA tracefiles</p>
+</dd>
+<dt>/usr/sap/$SID/HDB$nr/.crm_attribute.$SITE</dt>
+<dd>
+<p>the internal cache for srHook status changes while Linux cluster is down, file is owned and read/write by ${sid}adm and must never be touched</p>
+</dd>
+</dl>
+<h1>REQUIREMENTS</h1>
+<p>1. SAP HANA 2.0 SPS05 rev.059.04 or later provides Python 3 as well as the HA/DR provider hook method srConnectionChanged() with multi-target aware parameters. The Python 3 and multi-target aware parameters are needed for the SAPHanaSR-angi package.</p>
+<p>2. No other HADR provider hook script should be configured for the srConnectionChanged() method. Hook scripts for other methods, provided in SAPHanaSR-angi, can be used in parallel to susHanaSR.py, if not documented contradictingly.</p>
+<p>3. The user ${sid}adm needs execution permission as user root for the command crm_attribute.</p>
+<p>4. The user ${sid}adm needs ownership and read/write permission on the internal cache file /usr/sap/$SID/HDB$nr/.crm_attribute.$SITE and its parent directory.</p>
+<p>5. The hook provider needs to be added to the HANA global configuration, in memory and on disk (in persistence).</p>
+<p>6. The srHook script runtime almost completely depends on call-outs to OS and Linux cluster.</p>
+<h1>BUGS</h1>
+<p>In case of any problem, please use your favourite SAP support process to open a request for the component BC-OP-LNX-SUSE. Please report any other feedback and suggestions to <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="87e1e2e2e3e5e6e4ecc7f4f2f4e2a9e4e8ea">[email&#160;protected]</a>.</p>
+<h1>SEE ALSO</h1>
+<p><strong>SAPHanaSR-angi</strong>(7) , <strong>ocf_suse_SAPHanaTopology</strong>(7) , <strong>ocf_suse_SAPHanaController</strong>(7) , <strong>ocf_heartbeat_IPaddr2</strong>(7) , <strong>susCostOpt.py</strong>(7) , <strong>susTkOver.py</strong>(7) , <strong>susChkSrv.py</strong> (7) , <strong>SAPHanaSR-showAttr</strong>(8) , <strong>SAPHanaSR-manageProvider</strong>(8) ,
+<strong>SAPHanaSR-hookHelper</strong>(8) , <strong>crm_attribute</strong>(8) , <strong>sudo</strong>(8) , <strong>sudoers</strong>(5), <strong>python</strong>(8) , <strong>iptables</strong>(8) , <strong>ss</strong>(8) ,<br />
+https://help.sap.com/docs/SAP_HANA_PLATFORM?locale=en-US<br />
+https://help.sap.com/docs/SAP_HANA_PLATFORM/6b94445c94ae495c83a19646e7c3fd56/5df2e766549a405e95de4c5d7f2efc2d.html?locale=en-US</p>
+<h1>AUTHORS</h1>
+<p>A.Briel, F.Herschel, L.Pinne.</p>
+<h1>COPYRIGHT</h1>
+<p>(c) 2015-2017 SUSE Linux GmbH, Germany.<br />
+(c) 2018-2025 SUSE LLC<br />
+susHanaSR.py comes with ABSOLUTELY NO WARRANTY.<br />
+For details see the GNU General Public License at http://www.gnu.org/licenses/gpl.html</p>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"93a00e60cb4bd417","version":"2025.4.0-1-g37f21b1","r":1,"token":"0357a45f23a943f08700f7f9af191ee6","serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}}}' crossorigin="anonymous"></script>
+</body>
+</html>

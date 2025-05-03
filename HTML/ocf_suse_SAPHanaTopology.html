@@ -1,0 +1,344 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2024-12-02" />
+  <title>ocf_suse_SAPHanaTopology</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">ocf_suse_SAPHanaTopology</h1>
+<p class="date">02 Dec 2024</p>
+</header>
+<h1>NAME</h1>
+<p>SAPHanaTopology - 2つのSAP HANAデータベースをシステムレプリケーションで管理するのに役立ちます。</p>
+<h1>SYNOPSIS</h1>
+<p><strong>SAPHanaTopology</strong> [start | stop | status | monitor | meta-data | validate-all | reload | methods | usage ]</p>
+<h1>DESCRIPTION</h1>
+<p>SAPHanaTopologyはリソースエージェント（RA）であり、SAP HANAのトポロジーを分析し、クラスタ情報ベース（CIB）属性を介してクラスタ内のすべてのノードにすべての調査結果を「送信」します。これらの属性はSAPHanaController RAによって取得され、SAP HANAデータベースを制御します。さらに、SAPHanaTopology はローカルの saphostagent を起動して監視します。</p>
+<p>リソースエージェントは、SAPが提供する以下のインタフェースを使用します：</p>
+<p>1. <strong>landscapeHostConfiguration.py</strong><br />
+landscapeHostConfiguration.pyには、HANAシステムのステータスとノードの役割に関する詳細な出力があります。私たちのモニターでは、全体的なステータスが重要です。この全体的なステータスはスクリプトのリターンコードで報告されます： 0: Internal Fatal, 1: ERROR, 2: WARNING, 3: INFO (ホストの自動フェイルオーバーが発生したなど), 4: OK<br />
+SAPHanaTopology リソースエージェントは、リターンコード 0 を FATAL、1 を NOT-RUNNING（または ERROR）、リターンコード 2+3+4 を RUNNING と解釈します。FATAL は、ステータスを判断できないことを意味します。<br />
+SAPHanaTopologyはlandscapeHostConfiguration.pyの出力をスキャンしてクラスタノードのロールを特定します。ロールとは、ネームサーバとインデックスサーバの設定済みおよび現在のロールを意味します。</p>
+<p>2. <strong>hdbnsutil</strong><br />
+インターフェイスhdbnsutilは、システムレプリケーションの「トポロジー」とSAP HANAデータベースの現在の構成（プライマリ/セカンダリ）を確認するために使用されます。インターフェイスの2番目のタスクは、システムレプリケーションのテイクオーバー（sr_takeover）を実行したり、以前のプライマリを新しいプライマリに登録（sr_register）したりすることです。スケールアウト設定では、hdbnsutil に時間がかかることがあります。SAPHanaTopology はタスク1のみを使用します。SAPHanaController は 3 つのタスクすべてを使用しています。</p>
+<p>3. <strong>saphostctrl</strong><br />
+インターフェース saphostctrl は、関数 ListInstances を使用して SAP HANA インスタンスの仮想ホスト名を特定します。これは通常、HANAのインストール時に使用されたホスト名です。</p>
+<p>ノード・ステータス属性を介して調査結果を「送信」する方法は、次のバージョンで変更される可能性があります。そのため、これらの属性を「API」と考えないでください。また、自動的に設定されるノード属性は、通常の操作では手動で調整しないでください。属性の名前やセマンティクスは次のバージョンで変更される可能性があります。</p>
+<p>Please see also the REQUIREMENTS section below.</p>
+<h1>SUPPORTED PARAMETERS</h1>
+<p>This resource agent supports the following parameters:</p>
+<p><strong>SID</strong></p>
+<blockquote>
+<p>SAP System Identifier. Has to be same on both instances. Example "SID=SLE".</p>
+</blockquote>
+<p><strong>InstanceNumber</strong></p>
+<blockquote>
+<p>SAP HANAデータベースの番号。システムレプリケーションでは、インスタンス番号+1 もブロックされます。例 "InstanceNumber=00".</p>
+</blockquote>
+<p><strong>HANA_CALL_TIMEOUT</strong></p>
+<blockquote>
+<p>情報を受け取るためにHANAを呼び出す際のタイムアウト時間を定義します。これは例えばlandscapeHostConfiguration.pyのようになります。独自のタイムアウト値を持つHANAへの特定の呼び出しがいくつかあります。例えば、sr_takeoverコマンドはタイムアウトしません(inf)。タイムアウトに達した場合、リターンコードは124になります。HANAコールのタイムアウトを増やす場合は、Linuxクラスタリソースの操作タイムアウトも調整する必要があります。<br />
+Optional. Default value: 120</p>
+</blockquote>
+<h1>SUPPORTED PROPERTIES</h1>
+<p><strong>hana_${sid}_glob_filter</strong></p>
+<blockquote>
+<p>Global cluster property <strong>hana_${sid}_glob_filter</strong> . このプロパティは、どのメッセージが RA によってログに記録されるかを定義する。サポート・エンジニアから要求された場合のみ設定する。通常の操作では、デフォルトで十分です。<br />
+Message Types: [ act | dbg | dec | flow | top ]<br />
+ACT: Action. Start, stop, sr_takeover and others. See also section SUPPORTED ACTIONS.<br />
+DBG: Debugging info. Usually not needed at customer site. See SUSE TID 7022678 for maximum RA tracing.<br />
+DEC: Decision taken by the RA.<br />
+FLOW: Function calls and the respective return codes.<br />
+TOP: Topology. Messages related to HANA SR topology, like site name and remote site.<br />
+Optional, advanced. Default value: ra-act-dec-lpa.</p>
+</blockquote>
+<h1>SUPPORTED ACTIONS</h1>
+<p><br />
+This resource agent supports the following actions (operations):</p>
+<p><strong>start</strong></p>
+<blockquote>
+<p>クローンのステータスを 「started 」に設定する。</p>
+</blockquote>
+<p><strong>stop</strong></p>
+<blockquote>
+<p>クローンのステータスを 「stopped 」に設定する。</p>
+</blockquote>
+<p><strong>status</strong></p>
+<blockquote>
+<p>HANAインスタンスが実行中かどうかを報告します。推奨される最小タイムアウト： 60.</p>
+</blockquote>
+<p><strong>monitor</strong></p>
+<blockquote>
+<p>ノードHANAの役割とランドスケープのステータスを分析します。推奨される最小タイムアウト： 600. 推奨間隔 50.</p>
+</blockquote>
+<p><strong>validate-all</strong></p>
+<blockquote>
+<p>パラメータが有効かどうかを報告する。推奨される最小タイムアウト： 5.</p>
+</blockquote>
+<p><strong>meta-data</strong></p>
+<blockquote>
+<p>リソースエージェントのメタデータを取得します。推奨される最小タイムアウト： 5.</p>
+</blockquote>
+<p><strong>methods</strong></p>
+<blockquote>
+<p>リソースエージェントがサポートするメソッド(操作)を報告します。推奨される最小タイムアウト： 5.</p>
+</blockquote>
+<p><strong>reload</strong></p>
+<blockquote>
+<p>リソースのリカバリーを強制せずにパラメータを変更する。推奨される最小タイムアウト： 5.</p>
+</blockquote>
+<h1>RETURN CODES</h1>
+<p>リターンコードはOCFクラスターフレームワークによって定義されている。OCFの定義は後述のウェブサイトを参照されたい。<br />
+また、HANA_CALL_TIMEOUTを超過した場合は、リターンコード124が使用されます。</p>
+<h1>EXAMPLES</h1>
+<p>* HANA スケールアップのための SAPHanaTopology リソースの構成例。<br />
+また、これを実行するには SAPHanaController リソースが必要です。SAPHanaTopology の監視インターバルは、その SAPHanaController のインターバルよりも短くする必要があります。</p>
+<blockquote>
+<p>primitive rsc_SAPHanaTop_SLE_HDB00 ocf:suse:SAPHanaTopology \<br />
+op start interval="0" timeout="600" \<br />
+op stop interval="0" timeout="600" \<br />
+op monitor interval="50" timeout="600" \<br />
+params SID="SLE" InstanceNumber="00"</p>
+<p>clone cln_SAPHanaTop_SLE_HDB00 rsc_SAPHanaTop_SLE_HDB00 \<br />
+meta clone-node-max="1" interleave="true"</p>
+</blockquote>
+<p>* HANA スケールアウトのための SAPHanaTopology リソースの構成例。<br />
+HANAは、それぞれ5つのノードを持つ2つのサイトで構成されている。追加のクラスタノードは、スプリットブレイン状況の多数決メーカーとして使用される。さらに、これを実行するには SAPHanaController リソースが必要です。SAPHanaTopology の監視インターバルは、その SAPHanaController のインターバルよりも短くする必要があります。</p>
+<blockquote>
+<p>primitive rsc_SAPHanaTop_SLE_HDB00 ocf:suse:SAPHanaTopology \<br />
+op start interval="0" timeout="600" \<br />
+op stop interval="0" timeout="600" \<br />
+op monitor interval="50" timeout="600" \<br />
+params SID="SLE" InstanceNumber="00"</p>
+<p>clone cln_SAPHanaTop_SLE_HDB00 rsc_SAPHanaTop_SLE_HDB00 \<br />
+meta clone-node-max="1" interleave="true"</p>
+<p>location SAPHanaTop_not_on_majority_maker cln_SAPHanaTop_SLE_HDB00 -inf: vm-majority</p>
+<p>order SAPHanaTop_first Optional: cln_SAPHanaTop_SLE_HDB00 mst_SAPHanaCon_SLE_HDB00</p>
+</blockquote>
+<p>* プリミティブは "rsc_SAPHanaTop_SLE_HDB00" で、クローンは "cln_SAPHanaTop_SLE_HDB00" です。制約の名前は "SAPHanaTop "で始まります。</p>
+<blockquote>
+<p># crm configure show | grep SAPHanaTop<br />
+# crm configure show rsc_SAPHanaTop_SLE_HDB00<br />
+# crm configure show cln_SAPHanaTop_SLE_HDB00<br />
+# crm configure show SAPHanaTop_first</p>
+</blockquote>
+<p>* SAPHanaTopology syslogエントリとHANAネームサーバートレースエントリの関連付け。<br />
+</p>
+<blockquote>
+<p># grep "SAPHanaTop.*16933.*monitor_clone" /var/log/messages | awk '{print $1,$3,$7,$11,$12,$13}'<br />
+# su - hxeadm<br />
+~&gt; cdtrace<br />
+~&gt; grep "2023-11-01.*parent.*16933" nameserver_*trc | awk '{print $2,$3,$22,$23,$24,$25}'<br />
+~&gt; exit</p>
+</blockquote>
+<h1>FILES</h1>
+<dl>
+<dt>/usr/lib/ocf/resource.d/suse/SAPHanaController</dt>
+<dd>
+<p>the controller resource agent</p>
+</dd>
+<dt>/usr/lib/ocf/resource.d/suse/SAPHanaTopology</dt>
+<dd>
+<p>the topology resource agent</p>
+</dd>
+<dt>/usr/lib/ocf/resource.d/suse/SAPHanaFilesystem</dt>
+<dd>
+<p>the filesystem monitoring resource agent</p>
+</dd>
+<dt>/usr/lib/SAPHanaSR-angi/</dt>
+<dd>
+<p>directory with function libraries</p>
+</dd>
+<dt>$HA_RSCTMP/SAPHana/SAPTopologyON.$SID</dt>
+<dd>
+<p>the RA's status file (subject to change)</p>
+</dd>
+<dt>/usr/sap/$SID/$InstanceName/exe</dt>
+<dd>
+<p>default path for DIR_EXECUTABLE</p>
+</dd>
+<dt>/usr/sap/$SID/SYS/profile</dt>
+<dd>
+<p>default path for DIR_PROFILE</p>
+</dd>
+</dl>
+<h1>REQUIREMENTS</h1>
+<p>For the current version of the SAPHanaTopology resource agent that comes with the software package SAPHanaSR-angi, the support is limited to the scenarios and parameters described in the respective manual page SAPHanaSR-angi(7) and its references.</p>
+<h1>SEE ALSO</h1>
+<p><strong>ocf_suse_SAPHanaController</strong>(7) , <strong>ocf_suse_SAPHanaFilesystem</strong>(7) , <strong>SAPHanaSR-showAttr</strong>(8) , <strong>crm</strong>(8), <strong>SAPHanaSR-angi</strong>(7) , <strong>SAPHanaSR</strong>(7) , <strong>SAPHanaSR-ScaleOut</strong>(7) ,<br />
+https://documentation.suse.com/sbp/sap/ ,<br />
+http://clusterlabs.org/doc/en-US/Pacemaker/1.1/html/Pacemaker_Explained/s-ocf-return-codes.html ,<br />
+http://scn.sap.com/docs/DOC-60334<br />
+http://scn.sap.com/community/hana-in-memory/blog/2015/12/14/sap-hana-sps-11-whats-new-ha-and-dr--by-the-sap-hana-academy ,</p>
+<h1>AUTHORS</h1>
+<p>F.Herschel, L.Pinne.</p>
+<h1>COPYRIGHT</h1>
+<p>(c) 2014 SUSE Linux Products GmbH, Germany.<br />
+(c) 2015-2017 SUSE Linux GmbH, Germany.<br />
+(c) 2018-2024 SUSE LLC<br />
+SAPHanaTopology comes with ABSOLUTELY NO WARRANTY.<br />
+For details see the GNU General Public License at http://www.gnu.org/licenses/gpl.html</p>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"93a00aec7badd3c9","version":"2025.4.0-1-g37f21b1","r":1,"token":"0357a45f23a943f08700f7f9af191ee6","serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}}}' crossorigin="anonymous"></script>
+</body>
+</html>

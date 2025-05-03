@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2025-02-10" />
+  <title>susTkOver.py</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">susTkOver.py</h1>
+<p class="date">10 Feb 2025</p>
+</header>
+<h1>NAME</h1>
+<p>susTkOver.py - Provider for SAP HANA srHook method preTakeover().</p>
+<h1>DESCRIPTION</h1>
+<p>susTkOver.py can be used to provide a script for the SAP HANA srHook method preTakeover().</p>
+<p>The SAP HANA nameserver provides a Python-based API ("HA/DR providers"), which is called at important points of the host auto-failover and system replication takeover process. These so called hooks can be used for arbitrary operations that need to be executed. The method preTakeover() is called before the sr_takeover action.</p>
+<p>susTkOver.py allows manual takeover of the HANA primary if the SAP HANA multi-state resource (managed by SAPHanaController) is set into maintenance or the Linux cluster is stopped. Otherwise the manual takeover is blocked. See also manual page
+SAPHanaSR_maintenance_examples(7).</p>
+<p>This hook script needs to be configured and activated on all HANA nodes.</p>
+<h1>SUPPORTED PARAMETERS</h1>
+<p>* The "HA/DR providers" API accepts the following parameters for the ha_dr_provider_susTkOver section:</p>
+<dl>
+<dt><strong>[ha_dr_provider_susTkOver]</strong></dt>
+<dd>
+
+</dd>
+<dt><strong>provider = susTkOver</strong></dt>
+<dd>
+<p>Mandatory. Must not be changed.</p>
+</dd>
+<dt><strong>path = /usr/share/SAPHanaSR-angi</strong></dt>
+<dd>
+<p>Mandatory. Delivered within RPM package. Please change only if requested.</p>
+</dd>
+<dt><strong>execution_order = [ INTEGER ]</strong></dt>
+<dd>
+<p>Mandatory. Order might depend on other hook scripts.</p>
+</dd>
+<dt><strong>sustkover_timeout = [ INTEGER ]</strong></dt>
+<dd>
+<p>Optional. Default is 30 seconds.</p>
+</dd>
+</dl>
+<p>* The "HA/DR providers" API accepts the following parameter for the trace section:</p>
+<dl>
+<dt><strong>[trace]</strong></dt>
+<dd>
+
+</dd>
+<dt><strong>ha_dr_sustkover = [ info | debug ]</strong></dt>
+<dd>
+<p>Optional. Default is info. Will be added automatically, if not set.</p>
+</dd>
+</dl>
+<p>* The SAPHanaController RA is recognizing the pending takeover request via the following cluster attributes:</p>
+<dl>
+<dt><strong>sra = [ T | R | F | - ]</strong></dt>
+<dd>
+
+</dd>
+</dl>
+<p>HANA system replication takeover action, indicated by preTakeover().</p>
+<p>The node attribute system replication action is checked by the HA/DR provider API method preTakeover(). It is set by the resource agent SAPHanaController. It indicates whether a takeover or registration is ongoing.<br />
+T = Takeover on new primary (sr_takeover) ongoing.<br />
+R = Registration on new secondary (sr_register) ongoing.<br />
+F = Takeover failed.<br />
+- = No action pending.</p>
+<dl>
+<dt><strong>srah = [ T | R | F | - ]</strong></dt>
+<dd>
+
+</dd>
+</dl>
+<p>HANA system replication action history</p>
+<p>The node attribute system replication action history stores actions in CIB attributes for later use, for root cause analysis.</p>
+<h1>RETURN CODES</h1>
+<p><strong>0</strong> Successful program execution.<br />
+<strong>&gt;0</strong> Usage, syntax or execution errors.</p>
+<h1>EXAMPLES</h1>
+<p>* Simple example for sudo permissions in /etc/sudoers.d/SAPHanaSR .<br />
+SID is HA1. See also manual page SAPHanaSR-hookHelper(8).</p>
+<blockquote>
+<p># SAPHanaSR needs for susTkOver<br />
+ha1adm ALL=(ALL) NOPASSWD: /usr/bin/SAPHanaSR-hookHelper *</p>
+</blockquote>
+<p>* Example for looking up the sudo permission for the hook script.<br />
+All related files (/etc/sudoers and /etc/sudoers.d/*) are scanned. Example SID is HA1.</p>
+<blockquote>
+<p># sudo -U ha1adm -l | grep "NOPASSWD.*/usr/bin/SAPHanaSR-hookHelper"</p>
+</blockquote>
+<p>* Example for entry in SAP HANA scale-up global configuration /hana/shared/$SID/global/hdb/custom/config/global.ini<br />
+This file is needed at both sites. The HANA has to be stopped before the files can be changed.</p>
+<blockquote>
+<p>[ha_dr_provider_sustkover]<br />
+provider = susTkOver<br />
+path = /usr/share/SAPHanaSR-angi<br />
+sustkover_timeout = 30<br />
+execution_order = 1<br />
+[trace]<br />
+ha_dr_sustkover = info</p>
+</blockquote>
+<p>* Example for entry in SAP HANA scale-out global configuration /hana/shared/$SID/global/hdb/custom/config/global.ini<br />
+This file is needed at both sites. The HANA has to be stopped before the files can be edited.</p>
+<blockquote>
+<p>[ha_dr_provider_sustkover]<br />
+provider = susTkOver<br />
+path = /usr/share/SAPHanaSR-angi<br />
+sustkover_timeout = 30<br />
+execution_order = 1<br />
+[trace]<br />
+ha_dr_sustkover = info</p>
+</blockquote>
+<p>* Example for checking the system log for susTkOver setting HANA system replication status in the CIB properties section. To be executed on respective HANA primary site's master nameserver.</p>
+<blockquote>
+<p># grep "sudo.*SAPHanaSR-hookHelper" /var/log/messages</p>
+</blockquote>
+<p>* Example for checking the HANA tracefiles for preTakeover() events. To be executed on respective HANA secondary site's master nameserver.</p>
+<blockquote>
+<p># su - sleadm<br />
+~&gt; cdtrace<br />
+~&gt; grep susTk.*preTakeover.*called nameserver_*.trc</p>
+</blockquote>
+<p>* Example for showing intentionally blocked manual takeover attempts. To be executed on respective HANA secondary site's master nameserver.</p>
+<blockquote>
+<p># su - sleadm<br />
+~&gt; cdtrace<br />
+~&gt; grep susTkOver.preTakeover.*failed.*50277 nameserver_*.trc</p>
+</blockquote>
+<p>Note: If you see such messages, you may want to read SAPHanaSR_maintenance_examples(7).</p>
+<p>* Example for checking the HANA tracefiles for when the hook script has been loaded. To be executed on both sites' master nameservers.</p>
+<blockquote>
+<p># su - sleadm<br />
+~&gt; cdtrace<br />
+~&gt; grep HADR.*load.*susTkOver nameserver_*.trc<br />
+~&gt; grep susTkOver.init nameserver_*.trc</p>
+</blockquote>
+<h1>FILES</h1>
+<dl>
+<dt>/usr/share/SAPHanaSR-angi/susTkOver.py</dt>
+<dd>
+<p>the hook provider, delivered with the RPM</p>
+</dd>
+<dt>/usr/bin/SAPHanaSR-hookHelper</dt>
+<dd>
+<p>the external script to check and update the CIB attribute</p>
+</dd>
+<dt>/hana/shared/$SID/global/hdb/custom/config/global.ini</dt>
+<dd>
+<p>the on-disk representation of HANA global system configuration</p>
+</dd>
+<dt>/etc/sudoers , /etc/sudoers.d/*</dt>
+<dd>
+<p>the sudo permissions configuration</p>
+</dd>
+<dt>/usr/sap/$sid/HDB$nr/$HOST/trace/nameserver_$vhost.3????.???.trc</dt>
+<dd>
+<p>the HANA master nameserver tracefile</p>
+</dd>
+</dl>
+<h1>REQUIREMENTS</h1>
+<p>1. SAP HANA 2.0 SPS06 or later provides the HA/DR provider hook method preTakeover() with multi-target aware parameters and separate return code for Linux HA clusters.</p>
+<p>2. No other HADR provider hook script should be configured for the preTakeover() method. Hook scripts for other methods, provided in SAPHanaSR and SAPHanaSR-ScaleOut, can be used in parallel to susTkOver.py, if not documented contradictingly.</p>
+<p>3. The user ${sid}adm needs execution permission as user root for the command SAPHanaSR-hookHelper</p>
+<p>4. The hook provider needs to be added to the HANA global configuration, in memory and on disk (in persistence).</p>
+<p>5. If the hook provider should be pre-compiled, the particular Python version that comes with SAP HANA has to be used.</p>
+<h1>BUGS</h1>
+<p>In case of any problem, please use your favourite SAP support process to open a request for the component BC-OP-LNX-SUSE. Please report any other feedback and suggestions to <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3b5d5e5e5f595a58507b484e485e15585456">[email&#160;protected]</a>.</p>
+<h1>SEE ALSO</h1>
+<p><strong>SAPHanaSR</strong>(7) , <strong>SAPHanaSR-ScaleOut</strong>(7) , <strong>susHanaSR.py</strong>(7) , <strong>susHanaSrMultiTarget.py</strong>(7) ,
+<strong>ocf_suse_SAPHanaTopology</strong>(7) , <strong>ocf_suse_SAPHanaController</strong>(7) , <strong>SAPHanaSR-showAttr</strong>(8) , <strong>SAPHanaSR-hookHelper</strong>(8) ,
+<strong>SAPHanaSR_maintenance_examples</strong>(7) , <strong>SAPHanaSR-manageProvider</strong>(8) , <strong>crm_attribute</strong>(8) , <strong>sudo</strong>(8) , <strong>sudoers</strong>(5), <strong>python3</strong>(8) ,<br />
+https://help.sap.com/docs/SAP_HANA_PLATFORM?locale=en-US<br />
+https://help.sap.com/docs/SAP_HANA_PLATFORM/6b94445c94ae495c83a19646e7c3fd56/5df2e766549a405e95de4c5d7f2efc2d.html?locale=en-US</p>
+<h1>AUTHORS</h1>
+<p>A.Briel, F.Herschel, L.Pinne.</p>
+<h1>COPYRIGHT</h1>
+<p>(c) 2022-2025 SUSE LLC<br />
+susTkOver.py comes with ABSOLUTELY NO WARRANTY.<br />
+For details see the GNU General Public License at http://www.gnu.org/licenses/gpl.html</p>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"93a00e6fadfdd417","version":"2025.4.0-1-g37f21b1","r":1,"token":"0357a45f23a943f08700f7f9af191ee6","serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}}}' crossorigin="anonymous"></script>
+</body>
+</html>
